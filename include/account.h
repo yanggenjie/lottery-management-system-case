@@ -64,7 +64,7 @@ void AddToAdminLinkedList(AccountComm newAccount);
 //添加账户到Notary链表
 void AddToNotaryLinkedList(AccountComm ntAccount);
 //添加账户到User链表
-void AddToLotteryLinkedList(AccountComm userAccount);
+void AddToLotteryLinkedList(LotteryAccount userAccount);
 
 /*
  *    检查用户名及密码规范性

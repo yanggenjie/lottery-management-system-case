@@ -78,14 +78,6 @@ void DisplayLotteryTicketInfo(LotteryTicket *LT);
 /********************************/
 /*********保存功能相关**********/
 void Save();
-//保存彩民账号
-void WriteLotteryAccountToBin();
-//读取彩民账号
-void ReadLotteryAccountFromBin();
-
-void WriteLotteryTicketInfoToBin();
-//读取
-void ReadLotteryTicketInfoFromBin();
 
 
 #endif

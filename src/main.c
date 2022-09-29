@@ -1,11 +1,13 @@
 #include "account.h"
 #include "adminMenu.h"
+#include "fileIO.h"
 #include <stdio.h>
 #include <stdlib.h>
 int main()
 {
-    //初始化管理员账号
-    InitAdminAccount();
+    //初始化配置文件
+    initConfig();
+    //主菜单
     while (1)
     {
         int choose;

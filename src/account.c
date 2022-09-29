@@ -2,6 +2,7 @@
 #include "adminMenu.h"
 #include "userMenu.h"
 #include "notaryMenu.h"
+#include "fileIO.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -94,6 +95,8 @@ void AddNotaryAccount()
 //彩民注册
 void SignUpUser()
 {
+    LotteryAccount tempLTAccount;
+    //检测账号密码合规性
     AccountComm *temp = malloc(sizeof(AccountComm));
     temp = CheckAccountSpecification(temp);
     //如果用户名密码不合规，销毁空间，结束函数
@@ -102,8 +105,11 @@ void SignUpUser()
         free(temp);
         return;
     }
-    //合规，则传值，添加到链表
-    AddToLotteryLinkedList(*temp);
+    //合规，初始化余额，传值添加到链表
+    tempLTAccount.account=*temp;
+    tempLTAccount.balance=0;
+    AddToLotteryLinkedList(tempLTAccount);
+    //记录到文件
     WriteLotteryAccountToBin();
     //销毁临时空间
     free(temp);
@@ -246,11 +252,10 @@ void AddToNotaryLinkedList(AccountComm ntAccount)
     }
 }
 //添加到彩民链表
-void AddToLotteryLinkedList(AccountComm userAccount)
+void AddToLotteryLinkedList(LotteryAccount lotteryAccount)
 {
     Lottery *newUser = malloc(sizeof(Lottery));
-    newUser->account.account = userAccount;
-    newUser->account.balance = 0;
+    newUser->account=lotteryAccount;
     newUser->next = NULL;
     //如果头结点为空，标记新节点为头节点
     if (userHead == NULL)
