@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"demo3_func.h": "c",
+			"limits": "c",
+			"stdio.h": "c",
+			"linkedlist.h": "c",
+			"typeinfo": "c",
+			"adminmenu.h": "c",
+			"notarymenu.h": "c",
+			"account.h": "c",
+			"string.h": "c",
+			"cstdlib": "c"
+		}
+	}
+}
