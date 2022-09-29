@@ -7,8 +7,8 @@
 #include <string.h>
 #include <stdlib.h>
 //管理员链表头
-Admin *adminHead = NULL;
-Admin *adminCurrent = NULL;
+AdminAccountLinkedList *adminHead = NULL;
+AdminAccountLinkedList *adminCurrent = NULL;
 //彩民链表头
 Lottery *userHead = NULL;
 Lottery *userCurrent = NULL;
@@ -17,7 +17,7 @@ Notary *notaryHead = NULL;
 Notary *notaryCurrent = NULL;
 
 //当前登录的账号标记
-Admin *adminCurrentLogin = NULL;
+AdminAccountLinkedList *adminCurrentLogin = NULL;
 Lottery *lotteryCurrentLogin = NULL;
 Notary *notaryCurrentLogin = NULL;
 
@@ -26,16 +26,15 @@ Notary *notaryCurrentLogin = NULL;
 
 void SignUp()
 {
-    int choose;
     //选择要注册的类型
-    do
+    while (1)
     {
         printf("\n*******************************************\n");
         printf("\n\t1.彩民注册\n");
         printf("\t2.返回主菜单\n\n");
         printf("\n*******************************************\n");
         printf("请选择要注册的类型:");
-        scanf("%d", &choose);
+        int choose = RecStringConverToInt();
         switch (choose)
         {
         case 1:
@@ -44,9 +43,9 @@ void SignUp()
         case 2:
             return;
         default:
-            exit(EXIT_FAILURE);
+            break;
         }
-    } while (1);
+    }
 }
 
 //新增管理员账号(仅管理员可用)
@@ -62,7 +61,7 @@ void AddAdminAccount()
         return;
     }
     //合规，则传值，添加到管理员链表
-    AddToAdminLinkedList(*temp);
+    AddToAdminAccount(*temp);
     //销毁临时空间
     free(temp);
     printf("\n************注册成功!************\n");
@@ -86,7 +85,7 @@ void AddNotaryAccount()
         return;
     }
     //合规，则传值，添加到管理员链表
-    AddToNotaryLinkedList(*temp);
+    AddToNotaryAccount(*temp);
     //销毁临时空间
     free(temp);
     printf("\n************注册成功!************\n");
@@ -95,7 +94,7 @@ void AddNotaryAccount()
 //彩民注册
 void SignUpUser()
 {
-    LotteryAccount tempLTAccount;
+    LotteryData tempLTAccount;
     //检测账号密码合规性
     AccountComm *temp = malloc(sizeof(AccountComm));
     temp = CheckAccountSpecification(temp);
@@ -106,9 +105,11 @@ void SignUpUser()
         return;
     }
     //合规，初始化余额，传值添加到链表
-    tempLTAccount.account=*temp;
-    tempLTAccount.balance=0;
-    AddToLotteryLinkedList(tempLTAccount);
+    tempLTAccount.account = *temp;
+    tempLTAccount.balance = 0;
+    tempLTAccount.soldDataHead = NULL;
+    tempLTAccount.soldDataCurrent = NULL;
+    AddToLotteryAccount(tempLTAccount);
     //记录到文件
     WriteLotteryAccountToBin();
     //销毁临时空间
@@ -163,18 +164,18 @@ AccountComm *CheckAccountSpecification(AccountComm *account)
 int CheckALLUserName(char name[])
 {
     //遍历查找Admin表、Notary表、User表,若已存在返回1
-    int existedAdLinkList = CheckAdminLinkedList(name);
-    int existedNTLinkList = CheckNotaryLinkedList(name);
-    int existedUserLinkList = CheckUserLinkedList(name);
+    int existedAdLinkList = CheckAdminAccount(name);
+    int existedNTLinkList = CheckNotaryAccount(name);
+    int existedUserLinkList = CheckLotteryAccount(name);
     return (existedAdLinkList || existedNTLinkList || existedUserLinkList);
 }
 //遍历检查admin表
-int CheckAdminLinkedList(char name[])
+int CheckAdminAccount(char name[])
 {
-    Admin *temp = adminHead;
+    AdminAccountLinkedList *temp = adminHead;
     while (temp != NULL)
     {
-        if (strcmp(name, temp->account.name) == 0)
+        if (strcmp(name, temp->data.name) == 0)
         {
             return 1;
         }
@@ -183,12 +184,12 @@ int CheckAdminLinkedList(char name[])
     return 0;
 }
 //遍历检查Notary表
-int CheckNotaryLinkedList(char name[])
+int CheckNotaryAccount(char name[])
 {
     Notary *temp = notaryHead;
     while (temp != NULL)
     {
-        if (strcmp(name, temp->account.name) == 0)
+        if (strcmp(name, temp->data.name) == 0)
         {
             return 1;
         }
@@ -197,12 +198,12 @@ int CheckNotaryLinkedList(char name[])
     return 0;
 }
 //遍历检查User表
-int CheckUserLinkedList(char name[])
+int CheckLotteryAccount(char name[])
 {
     Lottery *temp = userHead;
     while (temp != NULL)
     {
-        if (strcmp(name, temp->account.account.name) == 0)
+        if (strcmp(name, temp->data.account.name) == 0)
         {
             return 1;
         }
@@ -211,15 +212,13 @@ int CheckUserLinkedList(char name[])
     return 0;
 }
 
-
-
 //添加到管理员链表
-void AddToAdminLinkedList(AccountComm newAccount)
-{ 
-    Admin *newAdmin = malloc(sizeof(Admin));
-    newAdmin->account = newAccount;
+void AddToAdminAccount(AccountComm newAccount)
+{
+    AdminAccountLinkedList *newAdmin = malloc(sizeof(AdminAccountLinkedList));
+    newAdmin->data = newAccount;
     newAdmin->next = NULL;
-    //如果头结点为空，标记新节点为头节点
+    //如果头节点为空，标记新节点为头节点
     if (adminHead == NULL)
     {
         adminHead = newAdmin;
@@ -233,13 +232,13 @@ void AddToAdminLinkedList(AccountComm newAccount)
     }
 }
 //添加到公证员链表
-void AddToNotaryLinkedList(AccountComm ntAccount)
+void AddToNotaryAccount(AccountComm ntAccount)
 {
-    
+
     Notary *newNotary = malloc(sizeof(Notary));
-    newNotary->account = ntAccount;
+    newNotary->data = ntAccount;
     newNotary->next = NULL;
-    //如果头结点为空，标记新节点为头节点
+    //如果头节点为空，标记新节点为头节点
     if (notaryHead == NULL)
     {
         notaryHead = newNotary;
@@ -252,12 +251,12 @@ void AddToNotaryLinkedList(AccountComm ntAccount)
     }
 }
 //添加到彩民链表
-void AddToLotteryLinkedList(LotteryAccount lotteryAccount)
+void AddToLotteryAccount(LotteryData lotteryAccount)
 {
     Lottery *newUser = malloc(sizeof(Lottery));
-    newUser->account=lotteryAccount;
+    newUser->data = lotteryAccount;
     newUser->next = NULL;
-    //如果头结点为空，标记新节点为头节点
+    //如果头节点为空，标记新节点为头节点
     if (userHead == NULL)
     {
         userHead = newUser;
@@ -270,8 +269,6 @@ void AddToLotteryLinkedList(LotteryAccount lotteryAccount)
         userCurrent = newUser;
     }
 }
-
-
 
 /********************************/
 /***********登录功能实现***********/
@@ -332,9 +329,9 @@ void SignIn()
 //管理员初始化
 void InitAdminAccount()
 {
-    Admin *initAccount = malloc(sizeof(Admin));
-    strcpy(initAccount->account.name, "admin");
-    strcpy(initAccount->account.pwd, "123");
+    AdminAccountLinkedList *initAccount = malloc(sizeof(AdminAccountLinkedList));
+    strcpy(initAccount->data.name, "admin");
+    strcpy(initAccount->data.pwd, "123");
     initAccount->next = NULL;
     adminHead = initAccount;
     adminCurrent = initAccount;
@@ -344,19 +341,19 @@ void InitAdminAccount()
 int IsAdminLogin(char name[], char pwd[])
 {
     //从Admin表头开始扫描
-    Admin *temp = adminHead;
+    AdminAccountLinkedList *temp = adminHead;
     if (temp == NULL)
     {
         return 0;
     }
     while (temp != NULL)
     {
-        int condition1 = (strcmp(name, temp->account.name) == 0);
-        int condition2 = (strcmp(pwd, temp->account.pwd) == 0);
+        int condition1 = (strcmp(name, temp->data.name) == 0);
+        int condition2 = (strcmp(pwd, temp->data.pwd) == 0);
         if (condition1 && condition2)
         {
             //标记当前登录账号
-            adminCurrentLogin=temp;
+            adminCurrentLogin = temp;
             return 1;
         }
         temp = temp->next;
@@ -375,12 +372,12 @@ int IsNotaryLogin(char name[], char pwd[])
     }
     while (temp != NULL)
     {
-        int condition1 = (strcmp(name, temp->account.name) == 0);
-        int condition2 = (strcmp(pwd, temp->account.pwd) == 0);
+        int condition1 = (strcmp(name, temp->data.name) == 0);
+        int condition2 = (strcmp(pwd, temp->data.pwd) == 0);
         if (condition1 && condition2)
         {
             //标记当前账号
-            notaryCurrentLogin=temp;
+            notaryCurrentLogin = temp;
             return 1;
         }
         temp = temp->next;
@@ -398,8 +395,8 @@ int IsUserLogin(char name[], char pwd[])
     }
     while (temp != NULL)
     {
-        int condition1 = (strcmp(name, temp->account.account.name) == 0);
-        int condition2 = (strcmp(pwd, temp->account.account.pwd) == 0);
+        int condition1 = (strcmp(name, temp->data.account.name) == 0);
+        int condition2 = (strcmp(pwd, temp->data.account.pwd) == 0);
         if (condition1 && condition2)
         {
             //标记当前登录账号
@@ -410,9 +407,6 @@ int IsUserLogin(char name[], char pwd[])
     }
     return 0;
 }
-
-
-
 
 /********************************/
 /***********注销功能相关***********/
@@ -425,7 +419,7 @@ void DeleteAccount()
         //仅有当前一个账号
         if (lotteryCurrentLogin == userHead && userHead->next == NULL)
         {
-            //头结点指向空
+            //头节点指向空
             userHead = NULL;
             userCurrent = NULL;
             //退出登录
@@ -434,7 +428,7 @@ void DeleteAccount()
         //有多个账号，当前账号处于第一个节点
         if (userHead->next != NULL && lotteryCurrentLogin == userHead)
         {
-            //头结点往后移动
+            //头节点往后移动
             userHead = lotteryCurrentLogin->next;
             //退出登录
             return;
@@ -465,9 +459,9 @@ int DeleteAccountOprationConfirm()
     ViewPersonalInfo();
     printf("注销账户之后，您的账户金额将被清空，且不可恢复！\n");
     printf("您购买彩票的历史订单将被移除，且不可恢复！\n");
-    printf("请输入当前账户名 %s 确认删除", lotteryCurrentLogin->account.account.name);
+    printf("请输入当前账户名 %s 确认删除", lotteryCurrentLogin->data.account.name);
     scanf("%s", uname);
-    if (strcmp(uname, lotteryCurrentLogin->account.account.name) == 0)
+    if (strcmp(uname, lotteryCurrentLogin->data.account.name) == 0)
     {
         int choose;
         printf("确认删除?\n1.确认\t2.取消");

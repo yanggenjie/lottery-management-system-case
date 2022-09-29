@@ -1,5 +1,6 @@
 #ifndef USER_H
 #define USER_H
+#include"userMenu.h"
 //账号通用信息
 struct accountComm
 {
@@ -11,15 +12,15 @@ typedef struct accountComm AccountComm;
 //管理员账号
 struct admin
 {
-    AccountComm account;
+    AccountComm data;
     struct admin *next;
 };
-typedef struct admin Admin;
+typedef struct admin AdminAccountLinkedList;
 
 //公证员账号
 struct notary
 {
-    AccountComm account;
+    AccountComm data;
     struct notary *next;
 };
 typedef struct notary Notary;
@@ -27,13 +28,15 @@ typedef struct notary Notary;
 //彩民账号
 typedef struct
 {
-    AccountComm account;
+    AccountComm account;//用户名和密码
     float balance; //余额
-} LotteryAccount;
+    LTSoldDataLinkedList *soldDataHead;//彩票号码头节点关联账户
+    LTSoldDataLinkedList *soldDataCurrent;//彩票号码当前节点关联账户
+} LotteryData;
 
 struct lottery
 {
-    LotteryAccount account;
+    LotteryData data;
     struct lottery *next;
 };
 typedef struct lottery Lottery;
@@ -59,12 +62,10 @@ void DeleteNotaryAccount();
 
 //彩民注册
 void SignUpUser();
-//添加账户到Admin链表
-void AddToAdminLinkedList(AccountComm newAccount);
-//添加账户到Notary链表
-void AddToNotaryLinkedList(AccountComm ntAccount);
-//添加账户到User链表
-void AddToLotteryLinkedList(LotteryAccount userAccount);
+//添加到对应账户链表
+void AddToAdminAccount(AccountComm newAccount);
+void AddToNotaryAccount(AccountComm ntAccount);
+void AddToLotteryAccount(LotteryData userAccount);
 
 /*
  *    检查用户名及密码规范性
@@ -82,19 +83,19 @@ int CheckALLUserName(char name[]);
  *    遍历检查admin表
  *返回值：在admin表中已存在，返回1；不存在返回0；
  */
-int CheckAdminLinkedList(char name[]);
+int CheckAdminAccount(char name[]);
 
 /*
  *     遍历检查Notary表
  * 返回值：在Notary表中已存在，返回1；不存在返回0；
  */
-int CheckNotaryLinkedList(char name[]);
+int CheckNotaryAccount(char name[]);
 
 /*
- *     遍历检查User表
- * 返回值：在User表中已存在，返回1；不存在返回0；
+ *     遍历检查Lottery表
+ * 返回值：在Lottery表中已存在，返回1；不存在返回0；
  */
-int CheckUserLinkedList(char name[]);
+int CheckLotteryAccount(char name[]);
 
 /********************************/
 /***********登录功能相关***********/
@@ -127,11 +128,6 @@ int IsNotaryLogin(char name[], char pwd[]);
 int IsUserLogin(char name[], char pwd[]);
 
 
-/********************************/
-/***********注销功能相关***********/
-//注销账户
-void DeleteAccount();
-//删除操作确认
-int DeleteAccountOprationConfirm();
+
 
 #endif

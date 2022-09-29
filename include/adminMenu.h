@@ -1,15 +1,22 @@
 #ifndef ADMINMENU_H
 #define ADMINMENU_H
 #include "account.h"
-#include<stdlib.h>
-//彩票发行信息
+#include <stdlib.h>
+//彩票基础信息
+typedef struct
+{
+	unsigned issue;			//发行期号
+	int price;				//彩票单价
+	unsigned short status;	//开奖状态,0未开奖，1已开奖
+	char winResult[22];//本期中奖号码
+	unsigned int totalSold; //本期售出总数
+	float totalPrize;		//本期奖池总额
+} LotteryTicketInfo;
+
+//彩票发行信息链表
 struct lotteryTicket
 {
-	unsigned int issue; //发行期号
-	int price;			//彩票单价
-	short int status;	//开奖状态,0未开奖，1已开奖
-	int totalSold;		//本期售出总数
-	float totalPrize;	//本期奖池总额
+	LotteryTicketInfo Info;
 	struct lotteryTicket *next;
 };
 typedef struct lotteryTicket LotteryTicket;
@@ -21,7 +28,7 @@ void AdminMenu();
 /***********发行彩票功能相关********/
 // 发行彩票
 void IssueLotteryTickey();
-
+void AddToLottertTickeyLinkedList(LotteryTicketInfo newInfo);
 /*
  *   检查期号唯一性
  * @param issue 期号
@@ -62,15 +69,13 @@ void DisplaySingleLotteryInfo(Lottery *userNode);
 //查找当前节点的上一节点
 Lottery *FindPreNode(Lottery *currentNode);
 
-
-
 /********************************/
 /*********账号管理功能相关**********/
 //账号管理
 void AccountManager();
 
 //查看发行历史
-void ViewRelease();
+void ReleaseView();
 
 //打印某期彩票信息
 void DisplayLotteryTicketInfo(LotteryTicket *LT);
@@ -79,5 +84,8 @@ void DisplayLotteryTicketInfo(LotteryTicket *LT);
 /*********保存功能相关**********/
 void Save();
 
-
+// 接收字符串,转为整型
+int RecStringConverToInt();
+//清空数据
+void ClearAllFiledata();
 #endif

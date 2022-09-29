@@ -230,3 +230,35 @@ Program received signal SIGINT, Interrupt.
 
 warning: Currently logging to gdb.txt.  Turn the logging off and on to make the new setting effective.
 Reading symbols from bin/Ticket...done.
+
+warning: Currently logging to gdb.txt.  Turn the logging off and on to make the new setting effective.
+Reading symbols from bin/Ticket...done.
+Breakpoint 1 at 0xcf6: file src/mainMenu.c, line 24.
+Starting program: /media/workspace/第一阶段项目/彩票管理系统/bin/Ticket 
+
+Breakpoint 1, main () at src/mainMenu.c:24
+24	            SignIn();
+SignIn () at src/account.c:281
+281	{
+282	    int cnt = 0;
+288	        printf("账号:");
+289	        scanf("%s", name);
+290	        printf("密码:");
+291	        scanf("%s", passwd);
+293	        if (IsAdminLogin(name, passwd))
+301	        else if (IsNotaryLogin(name, passwd))
+309	        else if (IsUserLogin(name, passwd))
+311	            printf("\n*******************************************\n");
+312	            printf("\t欢迎登入彩民客户端\n");
+313	            printf("*******************************************\n");
+314	            UserMenu();
+
+Program received signal SIGINT, Interrupt.
+0x00007ffff7af2031 in __GI___libc_read (fd=0, buf=0x55555575fbe0, nbytes=1024) at ../sysdeps/unix/sysv/linux/read.c:27
+27	../sysdeps/unix/sysv/linux/read.c: No such file or directory.
+Quit
+Quit
+Quit
+Quit
+Quit
+quit

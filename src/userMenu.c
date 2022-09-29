@@ -1,39 +1,35 @@
 #include "account.h"
 #include "userMenu.h"
 #include "adminMenu.h"
+#include "fileIO.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-//当前登录账号
+// 彩民当前登录的账号
 extern Lottery *lotteryCurrentLogin;
-//彩民链表头
+// 彩民账号
 extern Lottery *userHead;
 extern Lottery *userCurrent;
-//彩票号码记录
-LTSoldInfo *LTSoldInfoHead = NULL;
-LTSoldInfo *LTSoldInfoCurrent = NULL;
-
-// 发行彩票链表
+// 彩票发行信息
 extern LotteryTicket *LTHead;
 extern LotteryTicket *LTCurrent;
 
 //彩民客户端主界面
 void UserMenu()
 {
-    int choose;
     while (1)
     {
         printf("\t1.查看个人信息\n");
         printf("\t2.修改密码\n");
         printf("\t3.账户充值\n");
         printf("\t4.下注\n");
-        printf("\t5.查看历史记录\n");
+        printf("\t5.查看购买记录\n");
         printf("\t6.注销账号\n");
         printf("\t7.退出登录\n");
         printf("\n*******************************************\n");
         printf("请选择功能：");
-        scanf("%d", &choose);
+        int choose = RecStringConverToInt();
         switch (choose)
         {
         case 1:
@@ -49,6 +45,7 @@ void UserMenu()
             Bet();
             break;
         case 5:
+            DisplayBoughtHistory();
             break;
         case 6:
             DeleteAccount();
@@ -60,13 +57,13 @@ void UserMenu()
         }
     }
 }
-
+//查看个人信息
 void ViewPersonalInfo()
 {
-    printf("当前账号：%s\t", lotteryCurrentLogin->account.account.name);
-    printf("余额：%.2f\n", lotteryCurrentLogin->account.balance);
+    printf("当前账号：%s\t", lotteryCurrentLogin->data.account.name);
+    printf("余额：%.2f\n", lotteryCurrentLogin->data.balance);
 }
-
+//修改密码
 void ChangePassword()
 {
     char oldPasswd[32];
@@ -82,7 +79,7 @@ void ChangePassword()
         }
         printf("请输入原密码:");
         scanf("%s", oldPasswd);
-        if (strcmp(oldPasswd, lotteryCurrentLogin->account.account.pwd) == 0)
+        if (strcmp(oldPasswd, lotteryCurrentLogin->data.account.pwd) == 0)
         {
             printf("请输入新密码:");
             scanf("%s", newPasswd1);
@@ -90,7 +87,7 @@ void ChangePassword()
             scanf("%s", newPasswd2);
             if (strcmp(newPasswd1, newPasswd2) == 0)
             {
-                strcpy(lotteryCurrentLogin->account.account.pwd, newPasswd1);
+                strcpy(lotteryCurrentLogin->data.account.pwd, newPasswd1);
                 printf("密码修改成功,请重新登录\n");
                 //连续退出到登录界面
                 return;
@@ -117,11 +114,13 @@ void ChangePassword()
 void Recharge()
 {
 
-    printf("当前余额：%.2f\n", lotteryCurrentLogin->account.balance);
+    printf("当前余额：%.2f\n", lotteryCurrentLogin->data.balance);
     printf("要充值的金额:");
-    scanf("%f", &lotteryCurrentLogin->account.balance);
+    scanf("%f", &lotteryCurrentLogin->data.balance);
     printf("充值成功!\n");
-    printf("当前余额:%.2f\n", lotteryCurrentLogin->account.balance);
+    printf("当前余额:%.2f\n", lotteryCurrentLogin->data.balance);
+    //更新文件
+    WriteLotteryAccountToBin();
 }
 
 /********************************/
@@ -129,8 +128,7 @@ void Recharge()
 //下注
 void Bet()
 {
-    int number;
-    int method;
+    //判断当前是否有彩票发行
     if (LTHead == NULL)
     {
         printf("------------------------------------------\n");
@@ -138,10 +136,15 @@ void Bet()
         printf("------------------------------------------\n");
         return;
     }
-    printf("\n当前发行期数为%d,具体信息如下:", LTCurrent->issue);
+    //如果存在，显示发行信息
+    printf("\n当前发行期数为%d,具体信息如下:", LTCurrent->Info.issue);
     DisplayLotteryTicketInfo(LTCurrent);
+
+    //开始下注
     printf("\t你要下几注？(输入数字即可，如下两注直接输入2)：");
-    scanf("%d", &number);
+    int number = RecStringConverToInt();
+    printf("number=%d", number);
+    //单次最多可下5注
     if (number > 5)
     {
         printf("----------------------------\n");
@@ -149,144 +152,159 @@ void Bet()
         printf("----------------------------\n");
         return;
     }
-    if (lotteryCurrentLogin->account.balance < (LTCurrent->price * number))
+    //如果余额不足，无法进行下注，先提示充值
+    if (lotteryCurrentLogin->data.balance < (LTCurrent->Info.price * number))
     {
-        printf("您购买%d注号码，预计%d元\n", number, LTCurrent->price * number);
-        printf("您当前余额为:%.2f，余额不足，请先进行充值。\n", lotteryCurrentLogin->account.balance);
+        printf("您购买%d注号码，预计%d元\n", number, LTCurrent->Info.price * number);
+        printf("您当前余额为:%.2f，余额不足，请先进行充值。\n", lotteryCurrentLogin->data.balance);
         return;
     }
-    printf("请选择投注方式：\n\n1.自选号码投注\t2.机选号码投注\n\n");
-    scanf("%d", &method);
-    switch (method)
+    //所有条件都满足，可以选择下注方式
+    printf("请选择投注方式：\n\n1.自选号码投注\t2.机选号码投注\t3.取消投注\n\n");
+    int choose = RecStringConverToInt();
+    switch (choose)
     {
     case 1:
+        printf("暂不支持手动选号,待开发!\n");
         break;
     case 2:
         MachineSelection(number);
         break;
+    case 3:
+        return;
     default:
         break;
     }
-    //开始投注
-    //机选
-    // DisplayCurrentSelected();
 }
 
-// void MachineSelection(int num)
-// {
-//     srand(time(NULL));
-//     for (int i = 0; i < num; i++)
-//     {
-//         LTSoldNumber *newNum = malloc(sizeof(LTSoldNumber));
-//         // 6红色球号码从1—33中选择；1蓝色球号码从1—16中选择。
-//         for (int j = 0; j < 6; j++)
-//         {
-//             newNum->red[j] = rand() % 33 + 1;
-//         }
-//         newNum->blue = rand() % 16 + 1;
-//         //保存号码信息
-//         int duplicated = CheckBetNumberUniqueness(*newNum);
-//         if (!duplicated)
-//         {
-//             AddToSoldInfo(*newNum);
-//         }
-//         free(newNum);
-//     }
-// }
-
-//记录售出的号码
+//机选号码
 void MachineSelection(int n)
 {
-    srand((unsigned)time(NULL));
-    LTSoldInfo *newInfo = malloc(sizeof(LTSoldInfo));
+    //生成满足条件的字符串号码
+    SoldCommData newSoldData;
+    newSoldData.count = n;
     for (int i = 0; i < n; i++)
     {
         char nums[25] = {'\0'};
-        char empty = {'\0'};
-        rangeNum(nums);
-        strcpy(newInfo->num[i], nums);
+        do
+        {
+            randomNum(nums);
+        } while (CheckBetNumberUniqueness(nums));
+        strcpy(newSoldData.numStr[i], nums);
     }
-    // newInfo->userFlags = lotteryCurrentLogin;
-    newInfo->next = NULL;
-    if (LTSoldInfoHead == NULL)
+    //添加数据到链表
+    AddSoldDataToLinkedlist(newSoldData);
+}
+
+//添加到售出数据到链表
+void AddSoldDataToLinkedlist(SoldCommData newData)
+{
+    //申请新节点
+    LTSoldDataLinkedList *newNode = malloc(sizeof(LTSoldDataLinkedList));
+    //初始化
+    newNode->data = newData;
+    newNode->next = NULL;
+    //将新节点连接到链表中
+    if (lotteryCurrentLogin->data.soldDataHead == NULL)
     {
-        LTSoldInfoHead = newInfo;
-        LTSoldInfoCurrent = newInfo;
-        //余额变动
-        lotteryCurrentLogin->account.balance -= LTCurrent->price * n;
-        //奖池变动
-        LTCurrent->totalSold += n;
-        LTCurrent->totalPrize += LTCurrent->price * n;
+        //没有头节点,标记为头节点
+        lotteryCurrentLogin->data.soldDataHead = newNode;
+        lotteryCurrentLogin->data.soldDataCurrent = newNode;
+        //==余额变动==,余额=当前余额-单价*购买号码数
+        lotteryCurrentLogin->data.balance -= LTCurrent->Info.price * newData.count;
+        //==更新余额==
+        WriteLotteryAccountToBin();
+        //==奖池变动==,奖池售出量=当前奖池售出量+用户购买的号码数
+        //==奖池变动==,奖池奖金=当前奖池奖金+用户购买数*单价
+        LTCurrent->Info.totalSold += newData.count;
+        LTCurrent->Info.totalPrize += LTCurrent->Info.price * newData.count;
+        //==更新奖池==
+        WriteLotteryTicketInfoToBin();
         //提示机选成功
         DisplayCurrentSelected();
         return;
     }
-    LTSoldInfoCurrent->next = newInfo;
-    LTSoldInfoCurrent = newInfo;
-    //余额变动
-    lotteryCurrentLogin->account.balance -= LTCurrent->price * n;
-    //奖池变动
-    LTCurrent->totalSold += n;
-    LTCurrent->totalPrize += LTCurrent->price * n;
+    //已存在头节点,连接到节点尾部
+    lotteryCurrentLogin->data.soldDataCurrent->next = newNode;
+    lotteryCurrentLogin->data.soldDataCurrent = newNode;
+    //==余额变动==
+    lotteryCurrentLogin->data.balance -= LTCurrent->Info.price * newData.count;
+    //==更新余额==
+    WriteLotteryAccountToBin();
+    //==奖池变动==
+    LTCurrent->Info.totalSold += newData.count;
+    LTCurrent->Info.totalPrize += LTCurrent->Info.price * newData.count;
+    //==更新奖池==
+    WriteLotteryTicketInfoToBin();
     //提示机选成功
     DisplayCurrentSelected();
 }
 
-void rangeNum(char *nums)
+//生成随机数
+void randomNum(char *nums)
 {
     int red[6], blue;
-    do
+    char empty[25] = {'\0'};
+    //先清空用于接受随机字符串的字符数组
+    strcpy(nums, empty);
+    // 6红色球号码从1—33中选择；1蓝色球号码从1—16中选择。
+    for (int i = 0; i < 6; i++)
     {
-        // 6红色球号码从1—33中选择；1蓝色球号码从1—16中选择。
-        for (int i = 0; i < 6; i++)
-        {
-            char temp[5] = {'\0'};
-            red[i] = rand() % 33 + 1;
-            // 1-9在前面加0组成双位数
-            if (red[i] >= 1 && red[i] <= 9)
-            {
-                sprintf(temp, "0%d-", red[i]);
-                strcat(nums, temp);
-                continue;
-            }
-            sprintf(temp, "%d-", red[i]);
-            strcat(nums, temp);
-        }
-        blue = rand() % 16 + 1;
-        char blues[5] = {'\0'};
+        char temp[5] = {'\0'};
+        red[i] = rand() % 33 + 1;
         // 1-9在前面加0组成双位数
-        if (blue >= 1 && blue <= 9)
+        if (red[i] >= 1 && red[i] <= 9)
         {
-            sprintf(blues, "0%d", blue);
+            sprintf(temp, "0%d-", red[i]);
+            strcat(nums, temp);
+            continue;
         }
-        else
-        {
-            sprintf(blues, "%d", blue);
-        }
-        //得到随机数
-        strcat(nums, blues);
-        //检查重复性，如果有重复，清空empty
-    } while (CheckBetNumberUniqueness(nums));
+        sprintf(temp, "%d-", red[i]);
+        strcat(nums, temp);
+    }
+    blue = rand() % 16 + 1;
+    char blues[5] = {'\0'};
+    // 1-9在前面加0组成双位数
+    if (blue >= 1 && blue <= 9)
+    {
+        sprintf(blues, "0%d", blue);
+    }
+    else
+    {
+        sprintf(blues, "%d", blue);
+    }
+    //得到随机数
+    strcat(nums, blues);
 }
 
-//检查号码重复性
+//检查号码重复性，所有账号的
 int CheckBetNumberUniqueness(char nums[])
 {
-    LTSoldInfo *temp = LTSoldInfoHead;
-    if (temp == NULL)
+    //从第一个账号开始遍历
+    Lottery *user = userHead;
+    if (user == NULL)
     {
         return 0;
     }
-    while (temp != NULL)
+    while (user != NULL)
     {
+        //判断当前用户购买的彩票信息是否存在
+        if (user->data.soldDataHead == NULL)
+        {
+            //不存在结束当前循环，遍历下一个账号
+            user = user->next;
+            break;
+        }
+        //如果存在，则遍历当前账号在本期购买的号码
         for (int i = 0; i < 5; i++)
         {
-            if (strcmp(nums, temp->num[i]) == 0)
+            if (strcmp(nums, user->data.soldDataCurrent->data.numStr[i]) == 0)
             {
                 return 1;
             }
         }
-        temp = temp->next;
+        //继续遍历下一个账号
+        user = user->next;
     }
     return 0;
 }
@@ -297,28 +315,51 @@ void DisplayCurrentSelected()
     printf("----------------------------\n");
     printf("机选成功，您当前选到的号码如下：\n");
     printf("----------------------------\n");
-    for (int i = 0; *LTSoldInfoCurrent->num[i] != '\0'; i++)
+    for (int i = 0; *lotteryCurrentLogin->data.soldDataCurrent->data.numStr[i] != '\0'; i++)
     {
-        printf("%c  %s\n", 'A' + i, LTSoldInfoCurrent->num[i]);
+        printf("%c  %s\n", 'A' + i, lotteryCurrentLogin->data.soldDataCurrent->data.numStr[i]);
     }
     printf("感谢使用彩票管理系统，敬请期待开奖结果!\n");
     printf("----------------------------\n");
 }
 
-void DisplayBoughtInfo()
+//显示所有购买记录
+void DisplayBoughtHistory()
 {
-    LTSoldInfo *temp = LTSoldInfoHead;
+    LTSoldDataLinkedList *temp = lotteryCurrentLogin->data.soldDataHead;
     if (temp == NULL)
     {
         printf("没有购买过任何彩票\n");
         return;
     }
+    int cnt = 1;
+
+
+    printf("您购买的彩票信息如下:\n");
     while (temp != NULL)
     {
-        for (int i = 0; *temp->num[i] != '\0'; i++)
+        char empty[22] = {'\0'};
+        printf("---------------------------\n");
+        printf("第%d张彩票:\n", cnt++);
+        printf("发行期数:%d\n", LTCurrent->Info.issue);
+        if (LTCurrent->Info.status)
         {
-            printf("%s\n", temp->num[i]);
+            printf("开奖状态：已开奖\n");
         }
+        else
+        {
+            printf("开奖状态：未开奖\n");
+        }
+        printf("已购号码:\n");
+        for (int i = 0; strcmp(temp->data.numStr[i], empty) != 0; i++)
+        {
+            printf("%c  %s\n", 'A' + i, temp->data.numStr[i]);
+        }
+        printf("---------------------------\n");
         temp = temp->next;
     }
+    printf("您一共购买了%d张彩票,", cnt);
+    printf("共有%d个号码\n", temp->data.count);
+
+    printf("敬请期待开奖结果!\n");
 }

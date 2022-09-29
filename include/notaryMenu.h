@@ -4,6 +4,6 @@
 void NotaryMenu();
 
 //开奖
-void lottery();
+void ReleaseResults();
 
 #endif

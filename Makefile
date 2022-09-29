@@ -1,7 +1,7 @@
 CFLAGS:=-Iinclude
 CFLAGS+=-c
 TARGET:=bin/Ticket
-DEPEND:=obj/main.o
+DEPEND:=obj/mainMenu.o
 DEPEND+=obj/account.o
 DEPEND+=obj/adminMenu.o
 DEPEND+=obj/notaryMenu.o

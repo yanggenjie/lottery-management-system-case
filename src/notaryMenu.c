@@ -3,10 +3,10 @@
 #include <stdio.h>
 extern LotteryTicket *LTHead;
 extern LotteryTicket *LTCurrent;
+
 //公证员客户端主界面
 void NotaryMenu()
 {
-    int choose;
     while (1)
     {
         printf("\n*******************************************\n");
@@ -15,14 +15,14 @@ void NotaryMenu()
         printf("\t3.退出登录\n");
         printf("\n*******************************************\n");
         printf("请选择功能：");
-        scanf("%d", &choose);
+        int choose = RecStringConverToInt();
         switch (choose)
         {
         case 1:
-            lottery();
+            ReleaseResults();
             break;
         case 2:
-            ViewRelease();
+            ReleaseView();
             break;
         case 3:
             return;
@@ -33,23 +33,27 @@ void NotaryMenu()
 }
 
 //开奖
-void lottery()
+void ReleaseResults()
 {
+    //生成随机号作为结果
+    randomNum(LTCurrent->Info.winResult);
+    //打印结果
     if (LTHead == NULL)
     {
         printf("尚未发行任何彩票!\n");
         return;
     }
-    if (LTCurrent->status)
+    if (LTCurrent->Info.status)
     {
         printf("本期已开奖!\n");
+        printf("本期中奖号码为:%s\n", LTCurrent->Info.winResult);
         return;
-
     }
     else
     {
-        LTCurrent->status = 1;
+        LTCurrent->Info.status = 1;
         printf("开奖成功!\n");
+        printf("本期中奖号码为:%s\n", LTCurrent->Info.winResult);
         return;
     }
 }

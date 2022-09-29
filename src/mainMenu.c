@@ -3,14 +3,15 @@
 #include "fileIO.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 int main()
 {
     //初始化配置文件
-    initConfig();
+    InitConfig();
+    srand((unsigned)time(NULL)); //随机数生成
     //主菜单
     while (1)
     {
-        int choose;
         printf("\n\n*******************************************\n");
         printf("\n\t欢迎使用彩票管理系统\n\n");
         printf("\t1.登录\n");
@@ -18,7 +19,7 @@ int main()
         printf("\t3.退出程序\n");
         printf("\n*******************************************\n");
         printf("请选择功能：");
-        scanf("%d", &choose);
+        int choose = RecStringConverToInt();
         switch (choose)
         {
         case 1:
@@ -30,7 +31,7 @@ int main()
         case 3:
             exit(0);
         default:
-            exit(0);
+            break;
         }
     }
     return 0;
