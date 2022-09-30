@@ -5,30 +5,32 @@
 //彩票基础信息
 typedef struct
 {
-	unsigned issue;			//发行期号
-	int price;				//彩票单价
-	unsigned short status;	//开奖状态,0未开奖，1已开奖
-	char winResult[22];//本期中奖号码
-	unsigned int totalSold; //本期售出总数
-	float totalPrize;		//本期奖池总额
-} LotteryTicketInfo;
+	unsigned issue;		   //发行期号
+	int price;			   //彩票单价
+	unsigned short status; //开奖状态,0未开奖，1已开奖
+	char winResult[22];	   //本期中奖号码
+	unsigned totalSold;	   //本期售出总数
+	float totalPrize;	   //本期奖池总额
+} TicketData;
 
 //彩票发行信息链表
-struct lotteryTicket
+struct ticketLinkedlist
 {
-	LotteryTicketInfo Info;
-	struct lotteryTicket *next;
+	TicketData data;
+	struct ticketLinkedlist *next;
 };
-typedef struct lotteryTicket LotteryTicket;
+typedef struct ticketLinkedlist TicktetLinkedList;
+
 
 // 管理员后台主菜单
 void AdminMenu();
 
 /********************************/
 /***********发行彩票功能相关********/
+
 // 发行彩票
 void IssueLotteryTickey();
-void AddToLottertTickeyLinkedList(LotteryTicketInfo newInfo);
+void AddToLottertTickeyLinkedList(TicketData newData);
 /*
  *   检查期号唯一性
  * @param issue 期号
@@ -64,10 +66,10 @@ void SortDisplayLotteryByBalance();
 //显示所有彩民信息
 void DisplayAllLottery();
 //显示单个彩民信息
-void DisplaySingleLotteryInfo(Lottery *userNode);
+void DisplaySingleLotteryInfo(LotteryAccountLinkedList *userNode);
 
 //查找当前节点的上一节点
-Lottery *FindPreNode(Lottery *currentNode);
+LotteryAccountLinkedList *FindPreNode(LotteryAccountLinkedList *currentNode);
 
 /********************************/
 /*********账号管理功能相关**********/
@@ -78,7 +80,7 @@ void AccountManager();
 void ReleaseView();
 
 //打印某期彩票信息
-void DisplayLotteryTicketInfo(LotteryTicket *LT);
+void DisplayLotteryTicketInfo(TicktetLinkedList *LT);
 
 /********************************/
 /*********保存功能相关**********/

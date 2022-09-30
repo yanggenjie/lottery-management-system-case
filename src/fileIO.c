@@ -5,24 +5,24 @@
 #include <stdlib.h>
 #include <string.h>
 //彩民账号
-extern Lottery *userHead;
-extern Lottery *userCurrent;
+extern LotteryAccountLinkedList *userHead;
+extern LotteryAccountLinkedList *userCurrent;
 //当前登录的彩民
-extern Lottery *lotteryCurrentLogin;
+extern LotteryAccountLinkedList *lotteryCurrentLogin;
 
 //发行的彩票
-extern LotteryTicket *LTHead;
-extern LotteryTicket *LTCurrent;
+extern TicktetLinkedList *LTHead;
+extern TicktetLinkedList *LTCurrent;
 
 //初始化配置
 void InitConfig()
 {
     //初始化管理员账号
     InitAdminAccount();
-    //读取彩民账号
-    ReadLotteryAccountFromBin();
-    //读取彩票发行信息
-    ReadLotteryTicketInfoFromBin();
+    // //读取彩民账号
+    // ReadLotteryAccountFromBin();
+    // //读取彩票发行信息
+    // ReadLotteryTicketInfoFromBin();
 }
 
 /********************************/
@@ -30,13 +30,13 @@ void InitConfig()
 //保存彩民账号
 void WriteLotteryAccountToBin()
 {
-    FILE *userData = fopen("data/account/Lottery.dat", "wb");
+    FILE *userData = fopen("data/LotteryAccount.dat", "wb");
     if (userData == NULL)
     {
-        perror("data/account/Lottery.dat");
+        perror("data/LotteryAccount.dat");
         exit(EXIT_FAILURE);
     }
-    Lottery *temp = userHead;
+    LotteryAccountLinkedList *temp = userHead;
     if (temp == NULL)
     {
         printf("没有任何彩民信息，保存失败");
@@ -53,10 +53,10 @@ void WriteLotteryAccountToBin()
 //读取彩民账号
 void ReadLotteryAccountFromBin()
 {
-    FILE *LTAccountFile = fopen("data/account/Lottery.dat", "r");
+    FILE *LTAccountFile = fopen("data/LotteryAccount.dat", "r");
     if (LTAccountFile == NULL)
     {
-        perror("data/account/Lottery.dat");
+        perror("data/LotteryAccount.dat");
         exit(EXIT_FAILURE);
     }
     LotteryData LTaccountFromFile;
@@ -77,16 +77,16 @@ void WriteLotteryTicketInfoToBin()
         perror("data/LotteryTicket.dat");
         exit(EXIT_FAILURE);
     }
-    LotteryTicket *LTInfo = LTHead;
+    TicktetLinkedList *LTInfo = LTHead;
     if (LTHead == NULL)
     {
         printf("没有任何发行信息\n");
-        fwrite(&LTInfo->Info, sizeof(LotteryTicketInfo), 0, lotteryTicketFile);
+        fwrite(&LTInfo->data, sizeof(TicketData), 0, lotteryTicketFile);
         return;
     }
     while (LTInfo != NULL)
     {
-        fwrite(&LTInfo->Info, sizeof(LotteryTicketInfo), 1, lotteryTicketFile);
+        fwrite(&LTInfo->data, sizeof(TicketData), 1, lotteryTicketFile);
         LTInfo = LTInfo->next;
     }
     fclose(lotteryTicketFile);
@@ -104,8 +104,8 @@ void ReadLotteryTicketInfoFromBin()
         exit(EXIT_FAILURE);
     }
 
-    LotteryTicketInfo readLTInfoFromFile;
-    while (fread(&readLTInfoFromFile, sizeof(LotteryTicketInfo), 1, lotteryTicketFile) > 0)
+    TicketData readLTInfoFromFile;
+    while (fread(&readLTInfoFromFile, sizeof(TicketData), 1, lotteryTicketFile) > 0)
     {
         //增加到彩票链表
         AddToLottertTickeyLinkedList(readLTInfoFromFile);
@@ -117,11 +117,14 @@ void WriteBoughtHistoryToFile()
 {
     char fileName[100] = "data/boughtHistory";
     strcat(fileName, lotteryCurrentLogin->data.account.name);
+    //打开和关闭文件的假动作,如果一开始没有配置,会自动生成空配置
+    FILE *t=fopen(fileName,"ab");
+    fclose(t);
     FILE *outputData = fopen(fileName, "wb");
     if (outputData == NULL)
     {
         perror(fileName);
-        return;
+        exit(EXIT_FAILURE);
     }
     LTSoldDataLinkedList *temp = lotteryCurrentLogin->data.soldDataHead;
     if (temp == NULL)
@@ -145,6 +148,7 @@ void ReadBoughtHistoryFromFile()
     if (inputData == NULL)
     {
         perror(fileName);
+        // exit(EXIT_FAILURE);
         return;
     }
     SoldCommData newData;
@@ -153,5 +157,4 @@ void ReadBoughtHistoryFromFile()
         //添加到当前用户的历史链表
         AddSoldDataToLinkedlist(newData);
     }
-
 }

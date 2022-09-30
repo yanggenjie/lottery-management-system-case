@@ -23,7 +23,7 @@ struct notary
     AccountComm data;
     struct notary *next;
 };
-typedef struct notary Notary;
+typedef struct notary NotaryAccountLinkedlist;
 
 //彩民账号
 typedef struct
@@ -32,6 +32,8 @@ typedef struct
     float balance; //余额
     LTSoldDataLinkedList *soldDataHead;//彩票号码头节点关联账户
     LTSoldDataLinkedList *soldDataCurrent;//彩票号码当前节点关联账户
+    unsigned tickets;//购买的彩票张数
+    unsigned ticketNums;//购买的彩票号码数
 } LotteryData;
 
 struct lottery
@@ -39,7 +41,7 @@ struct lottery
     LotteryData data;
     struct lottery *next;
 };
-typedef struct lottery Lottery;
+typedef struct lottery LotteryAccountLinkedList;
 
 /********************************/
 /***********注册功能相关***********/
@@ -128,6 +130,14 @@ int IsNotaryLogin(char name[], char pwd[]);
 int IsUserLogin(char name[], char pwd[]);
 
 
+/*
+* 统计更新某个用户购买的彩票数、号码数
+* user 要统计的用户
+*/
+void UpdateUserTicketsAndNumbers(LotteryAccountLinkedList *user);
+
+//显示某个用户的购买记录
+void DisplayUserBoughtData(LotteryAccountLinkedList *user);
 
 
 #endif

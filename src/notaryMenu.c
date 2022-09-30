@@ -1,8 +1,8 @@
 #include "adminMenu.h"
 #include "notaryMenu.h"
 #include <stdio.h>
-extern LotteryTicket *LTHead;
-extern LotteryTicket *LTCurrent;
+extern TicktetLinkedList*LTHead;
+extern TicktetLinkedList*LTCurrent;
 
 //公证员客户端主界面
 void NotaryMenu()
@@ -36,24 +36,24 @@ void NotaryMenu()
 void ReleaseResults()
 {
     //生成随机号作为结果
-    randomNum(LTCurrent->Info.winResult);
+    randomNum(LTCurrent->data.winResult);
     //打印结果
     if (LTHead == NULL)
     {
         printf("尚未发行任何彩票!\n");
         return;
     }
-    if (LTCurrent->Info.status)
+    if (LTCurrent->data.status)
     {
         printf("本期已开奖!\n");
-        printf("本期中奖号码为:%s\n", LTCurrent->Info.winResult);
+        printf("本期中奖号码为:%s\n", LTCurrent->data.winResult);
         return;
     }
     else
     {
-        LTCurrent->Info.status = 1;
+        LTCurrent->data.status = 1;
         printf("开奖成功!\n");
-        printf("本期中奖号码为:%s\n", LTCurrent->Info.winResult);
+        printf("本期中奖号码为:%s\n", LTCurrent->data.winResult);
         return;
     }
 }

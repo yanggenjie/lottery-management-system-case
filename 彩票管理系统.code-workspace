@@ -15,7 +15,8 @@
 			"notarymenu.h": "c",
 			"account.h": "c",
 			"string.h": "c",
-			"cstdlib": "c"
+			"cstdlib": "c",
+			"usermenu.h": "c"
 		}
 	}
 }

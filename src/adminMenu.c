@@ -11,11 +11,11 @@
 // float totalPrize; //本期奖池总额
 
 // 发行的彩票信息
-LotteryTicket *LTHead = NULL;
-LotteryTicket *LTCurrent = NULL;
+TicktetLinkedList *LTHead = NULL;
+TicktetLinkedList *LTCurrent = NULL;
 // 彩民账号
-extern Lottery *userHead;
-extern Lottery *userCurrent;
+extern LotteryAccountLinkedList *userHead;
+extern LotteryAccountLinkedList *userCurrent;
 
 // 管理员后台主菜单
 void AdminMenu()
@@ -71,9 +71,9 @@ void AdminMenu()
 void IssueLotteryTickey()
 {
     printf("输入发行期号(期号格式如:20220901)：");
-    unsigned int issue = RecStringConverToInt();
-    int issueUniqueness = CheckIssueNumberUniqueness(issue);
-    int preStatus = CheckPreIssueStatus();
+    unsigned issue = RecStringConverToInt();
+    int issueUniqueness = CheckIssueNumberUniqueness(issue);//期号唯一
+    int preStatus = CheckPreIssueStatus();//开奖状态
     //判断期号唯一性
     if (issueUniqueness)
     {
@@ -81,18 +81,16 @@ void IssueLotteryTickey()
         if (preStatus)
         {
             //发行彩票
-            LotteryTicketInfo newInfo;
-            newInfo.issue = issue;  //输入期号
-            newInfo.price = 2;      //默认单价
-            newInfo.status = 0;     //默认未开奖
-            char empty[22]={'\0'};
-            strcpy(newInfo.winResult,empty);//默认没有中奖号码
-            newInfo.totalSold = 0;  //初始化售出总数
-            newInfo.totalPrize = 0; //初始化奖池总额
+            TicketData newInfo;
+            newInfo.issue = issue; //输入期号
+            newInfo.price = 2;     //默认单价
+            newInfo.status = 0;    //默认未开奖
+            char empty[22] = {'\0'};
+            strcpy(newInfo.winResult, empty); //默认没有中奖号码
+            newInfo.totalSold = 0;            //初始化售出总数
+            newInfo.totalPrize = 0;           //初始化奖池总额
             //添加到链表
             AddToLottertTickeyLinkedList(newInfo);
-            //更新文件链表
-            WriteLotteryTicketInfoToBin();
         }
         else
         {
@@ -110,18 +108,18 @@ void IssueLotteryTickey()
 }
 
 //添加到彩票信息链表
-void AddToLottertTickeyLinkedList(LotteryTicketInfo newInfo)
+void AddToLottertTickeyLinkedList(TicketData newData)
 {
     //发行彩票
-    LotteryTicket *newLT = malloc(sizeof(LotteryTicket));
-    newLT->Info = newInfo;
+    TicktetLinkedList *newLT = malloc(sizeof(TicktetLinkedList));
+    newLT->data = newData;
     newLT->next = NULL;
     if (LTHead == NULL)
     {
         LTHead = newLT;
         LTCurrent = newLT;
         printf("************************\n");
-        printf("第%d期彩票发行成功!", LTCurrent->Info.issue);
+        printf("第%d期彩票发行成功!", LTCurrent->data.issue);
         DisplayLotteryTicketInfo(LTCurrent);
         printf("************************\n");
         return;
@@ -129,7 +127,7 @@ void AddToLottertTickeyLinkedList(LotteryTicketInfo newInfo)
     LTCurrent->next = newLT;
     LTCurrent = newLT;
     printf("************************\n");
-    printf("第%d期彩票发行成功!\n", LTCurrent->Info.issue);
+    printf("第%d期彩票发行成功!\n", LTCurrent->data.issue);
     DisplayLotteryTicketInfo(LTCurrent);
     printf("************************\n");
 }
@@ -137,10 +135,10 @@ void AddToLottertTickeyLinkedList(LotteryTicketInfo newInfo)
 //判断期号唯一性
 int CheckIssueNumberUniqueness(unsigned int issue)
 {
-    LotteryTicket *temp = LTHead;
+    TicktetLinkedList *temp = LTHead;
     while (temp != NULL)
     {
-        if (issue == temp->Info.issue)
+        if (issue == temp->data.issue)
         {
             //在历史中找到相同的期号，说明不唯一，返回0
             return 0;
@@ -162,7 +160,7 @@ int CheckPreIssueStatus()
     else
     {
         //如果已发行过1期以上，未发行新期之前，上一期就是当前期。
-        return LTCurrent->Info.status;
+        return LTCurrent->data.status;
     }
 }
 
@@ -203,7 +201,7 @@ void QueryByUserName()
     printf("输入要查询的用户名：");
     scanf("%s", uname);
     //遍历查询User表
-    Lottery *temp = userHead;
+    LotteryAccountLinkedList *temp = userHead;
     if (temp == NULL)
     {
         printf("\n尚不存在任何用户!\n");
@@ -228,7 +226,7 @@ void QueryByUserName()
 void QueryByBalanceRange()
 {
     float min, max;
-    Lottery *temp = userHead;
+    LotteryAccountLinkedList *temp = userHead;
     int check = 0; //用于检测找到的结果数
     printf("请指定余额区间,结果包含区间边界(格式如:10-20)：");
     scanf("%f-%f", &min, &max);
@@ -303,12 +301,12 @@ void SortDisplayLotteryByAccount()
     }
 
     //有2个以上的用户，进行选择排序，升序排序
-    for (Lottery *i = userHead; i != NULL; i = i->next)
+    for (LotteryAccountLinkedList *i = userHead; i != NULL; i = i->next)
     {
         //标记最小值
-        Lottery *min = i;
+        LotteryAccountLinkedList *min = i;
         //扫描比较
-        for (Lottery *j = i->next; j != NULL; j = j->next)
+        for (LotteryAccountLinkedList *j = i->next; j != NULL; j = j->next)
         {
             if (strcmp(min->data.account.name, j->data.account.name) > 0)
             {
@@ -317,8 +315,8 @@ void SortDisplayLotteryByAccount()
         }
         //得到更小值之后，节点交换
         //如果是头节点，要重新标记头节点，其他可直接交换
-        Lottery *prev = FindPreNode(min);
-        Lottery *next = min->next;
+        LotteryAccountLinkedList *prev = FindPreNode(min);
+        LotteryAccountLinkedList *next = min->next;
         if (prev == userHead)
         {
             userHead->next = min->next;
@@ -350,12 +348,12 @@ void SortDisplayLotteryByBalance()
     }
 
     //有2个以上的用户，进行选择排序，升序排序
-    for (Lottery *i = userHead; i != NULL; i = i->next)
+    for (LotteryAccountLinkedList *i = userHead; i != NULL; i = i->next)
     {
         //标记最小值
-        Lottery *min = i;
+        LotteryAccountLinkedList *min = i;
         //扫描比较
-        for (Lottery *j = i->next; j != NULL; j = j->next)
+        for (LotteryAccountLinkedList *j = i->next; j != NULL; j = j->next)
         {
             if (min->data.balance > j->data.balance)
             {
@@ -364,8 +362,8 @@ void SortDisplayLotteryByBalance()
         }
         //得到更小值之后，节点交换
         //如果是头节点，要重新标记头节点，其他可直接交换
-        Lottery *prev = FindPreNode(min);
-        Lottery *next = min->next;
+        LotteryAccountLinkedList *prev = FindPreNode(min);
+        LotteryAccountLinkedList *next = min->next;
         if (prev == userHead)
         {
             userHead->next = min->next;
@@ -382,9 +380,9 @@ void SortDisplayLotteryByBalance()
     DisplayAllLottery();
 }
 
-Lottery *FindPreNode(Lottery *currentNode)
+LotteryAccountLinkedList *FindPreNode(LotteryAccountLinkedList *currentNode)
 {
-    Lottery *temp = userHead;
+    LotteryAccountLinkedList *temp = userHead;
     if (currentNode == userHead)
     {
         return NULL;
@@ -402,7 +400,7 @@ Lottery *FindPreNode(Lottery *currentNode)
 //显示所有彩民信息
 void DisplayAllLottery()
 {
-    Lottery *temp = userHead;
+    LotteryAccountLinkedList *temp = userHead;
     if (temp == NULL)
     {
         printf("尚不存在任何用户\n");
@@ -414,7 +412,7 @@ void DisplayAllLottery()
     }
 }
 //输出单个彩民信息
-void DisplaySingleLotteryInfo(Lottery *userNode)
+void DisplaySingleLotteryInfo(LotteryAccountLinkedList *userNode)
 {
     if (userNode == NULL)
     {
@@ -464,7 +462,7 @@ void AccountManager()
 //查看发行历史
 void ReleaseView()
 {
-    LotteryTicket *temp = LTHead;
+    TicktetLinkedList *temp = LTHead;
     if (temp == NULL)
     {
         printf("\n*********尚未发行过彩票**********\n");
@@ -478,7 +476,7 @@ void ReleaseView()
     }
 }
 //打印某期彩票信息
-void DisplayLotteryTicketInfo(LotteryTicket *LT)
+void DisplayLotteryTicketInfo(TicktetLinkedList *LT)
 {
     if (LT == NULL)
     {
@@ -486,9 +484,9 @@ void DisplayLotteryTicketInfo(LotteryTicket *LT)
         return;
     }
     printf("\n----------------------------\n");
-    printf("\t第%d期\n", LT->Info.issue);
-    printf("\t单价:%d元\n", LT->Info.price);
-    if (LT->Info.status)
+    printf("\t第%d期\n", LT->data.issue);
+    printf("\t单价:%d元\n", LT->data.price);
+    if (LT->data.status)
     {
         printf("\t开奖状态：已开奖\n");
     }
@@ -496,9 +494,9 @@ void DisplayLotteryTicketInfo(LotteryTicket *LT)
     {
         printf("\t开奖状态：未开奖\n");
     }
-    printf("\t本期中奖号码:%s\n", LT->Info.winResult);
-    printf("\t本期售出总数:%d\n", LT->Info.totalSold);
-    printf("\t本期奖池总额:%.2f\n", LT->Info.totalPrize);
+    printf("\t本期中奖号码:%s\n", LT->data.winResult);
+    printf("\t本期售出总数:%d\n", LT->data.totalSold);
+    printf("\t本期奖池总额:%.2f\n", LT->data.totalPrize);
     printf("----------------------------\n");
 }
 
@@ -558,8 +556,8 @@ void ClearAllFiledata()
         perror("data/Lottery.dat");
         exit(EXIT_FAILURE);
     }
-    LotteryTicketInfo empty;
-    fwrite(&empty,sizeof(LotteryTicket),0,LTFile);
+    TicketData empty;
+    fwrite(&empty, sizeof(TicktetLinkedList), 0, LTFile);
     fclose(LTFile);
     //清空彩民账号
 

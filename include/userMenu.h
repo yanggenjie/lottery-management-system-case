@@ -3,7 +3,8 @@
 //彩票售出号码记录
 typedef struct
 {
-	unsigned short count;//购买的号码数量
+	unsigned issueNum;//发行期号
+	unsigned short status;//开奖状态
 	char numStr[5][22]; //单张彩票最多5组号码
 } SoldCommData;
 
@@ -53,6 +54,19 @@ void randomNum(char *nums);
 */
 int CheckBetNumberUniqueness(char nums[]);
 
+
+
+
+
+//统计所有用户购买的彩票数
+
+
+/*
+* 	更新奖池
+* 更新奖池，应该遍历所有用户购买的彩票数
+*/
+void UpdatePrizePool();
+
 /********************************/
 /***********注销账号相关***********/
 //注销账户
@@ -63,10 +77,8 @@ int DeleteAccountOprationConfirm();
 /********************************/
 /***********查看历史记录***********/
 
-//显示当前购买的号码
-void DisplayCurrentSelected();
+//下注成功通知
+void DisplaySelectedResult();
 
-//显示所有购买记录
-void DisplayBoughtHistory();
 
 #endif

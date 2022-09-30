@@ -1,9 +1,9 @@
 <map version="freeplane 1.9.13">
 <!--To view this file, download free mind mapping software Freeplane from https://www.freeplane.org -->
-<node TEXT="彩票管理系统" LOCALIZED_STYLE_REF="AutomaticLayout.level.root" FOLDED="false" ID="ID_1090958577" CREATED="1409300609620" MODIFIED="1664298423815" VGAP_QUANTITY="2 pt">
+<node TEXT="彩票管理系统" LOCALIZED_STYLE_REF="AutomaticLayout.level.root" FOLDED="false" ID="ID_1090958577" CREATED="1409300609620" MODIFIED="1664470320139" VGAP_QUANTITY="2 pt">
 <hook NAME="accessories/plugins/AutomaticLayout.properties" VALUE="ALL"/>
 <font BOLD="true"/>
-<hook NAME="MapStyle" background="#f9f9f8" zoom="0.77">
+<hook NAME="MapStyle" background="#f9f9f8" zoom="0.455">
     <properties show_icon_for_attributes="true" edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff" show_notes_in_map="true" show_note_icons="true" associatedTemplateLocation="template:/light_nord_template.mm" fit_to_viewport="false"/>
 
 <map_styles>
@@ -36,7 +36,7 @@
 <stylenode LOCALIZED_TEXT="styles.user-defined" POSITION="right" STYLE="bubble">
 <stylenode LOCALIZED_TEXT="styles.important" ID="ID_915433779" BORDER_COLOR="#bf616a" FORMAT="markdownPatternFormat">
 <icon BUILTIN="yes"/>
-<arrowlink COLOR="#bf616a" TRANSPARENCY="255" DESTINATION="ID_915433779" STARTINCLINATION="66.75 pt;-22.5 pt;" ENDINCLINATION="66.75 pt;3.75 pt;"/>
+<arrowlink COLOR="#bf616a" TRANSPARENCY="255" DESTINATION="ID_915433779" STARTINCLINATION="66.75 pt;-21.75 pt;" ENDINCLINATION="66.75 pt;3.75 pt;"/>
 <font NAME="Ubuntu" SIZE="14"/>
 <edge COLOR="#bf616a"/>
 </stylenode>
@@ -139,6 +139,12 @@
 <node TEXT="足球胜负彩" ID="ID_1104027894" CREATED="1664012356272" MODIFIED="1664012362102"/>
 </node>
 </node>
+<node TEXT="明天先在内存中测试所有功能是否可用&#xa;&#xa;然后再逐一做保存文件的功能" LOCALIZED_STYLE_REF="defaultstyle.floating" POSITION="right" ID="ID_840966934" CREATED="1664470243776" MODIFIED="1664470322536" HGAP_QUANTITY="572.99998 pt" VSHIFT_QUANTITY="-312.74999 pt" FORMAT="markdownPatternFormat">
+<icon BUILTIN="flag"/>
+<hook NAME="FreeNode"/>
+<cloud COLOR="#f0f0f0" SHAPE="RECT"/>
+</node>
+<node TEXT="" POSITION="right" ID="ID_1898050690" CREATED="1664470292377" MODIFIED="1664470292377"/>
 <node TEXT="标识符命名规则&#xd;&#xa;&#xd;&#xa;函数用**大驼峰**&#xd;&#xa;&#xd;&#xa;其它变量名用**小驼峰**" LOCALIZED_STYLE_REF="defaultstyle.floating" POSITION="right" ID="ID_384521895" CREATED="1664031502483" MODIFIED="1664164463789" HGAP_QUANTITY="-726.74998 pt" VSHIFT_QUANTITY="-85.5 pt" COLOR="#000000" BACKGROUND_COLOR="#ffffff">
 <hook NAME="FreeNode"/>
 </node>
@@ -147,7 +153,7 @@
 <icon BUILTIN="25%"/>
 <node TEXT="发行彩票" ID="ID_1396798079" CREATED="1664004446982" MODIFIED="1664194067667">
 <icon BUILTIN="button_ok"/>
-<node TEXT="" ID="ID_921827313" CREATED="1664381927063" MODIFIED="1664381927063"/>
+<node TEXT="发行的彩票在内存中，要选择保存才会写入文件" ID="ID_921827313" CREATED="1664381927063" MODIFIED="1664469799707"/>
 </node>
 <node TEXT="查询彩民信息" ID="ID_429736555" CREATED="1664004485594" MODIFIED="1664275734900">
 <icon BUILTIN="button_ok"/>
@@ -189,9 +195,11 @@
 </node>
 <node TEXT="保存" ID="ID_992678354" CREATED="1664004494445" MODIFIED="1664298386618">
 <icon BUILTIN="flag"/>
-<node TEXT="保存彩民信息" ID="ID_833057772" CREATED="1664293079631" MODIFIED="1664293083116"/>
-<node TEXT="保存彩票信息" ID="ID_1765137449" CREATED="1664293083270" MODIFIED="1664293095708">
+<node TEXT="保存彩民账号" ID="ID_833057772" CREATED="1664293079631" MODIFIED="1664451345549">
 <node TEXT="正在写保存功能" ID="ID_438921882" CREATED="1664298393008" MODIFIED="1664385207343"/>
+</node>
+<node TEXT="保存彩票信息" ID="ID_1765137449" CREATED="1664293083270" MODIFIED="1664451341757">
+<icon BUILTIN="button_ok"/>
 </node>
 </node>
 <node TEXT="退出登录" ID="ID_690092702" CREATED="1664194345271" MODIFIED="1664204824735">
@@ -229,6 +237,9 @@
 <node TEXT="购买彩票时余额不足要提示" ID="ID_1956043831" CREATED="1664329530249" MODIFIED="1664381796387">
 <icon BUILTIN="button_ok"/>
 </node>
+<node TEXT="充值成功后自动保存数据到文件" ID="ID_1066717046" CREATED="1664440123048" MODIFIED="1664469560536" BACKGROUND_COLOR="#33ff33">
+<icon BUILTIN="button_cancel"/>
+</node>
 </node>
 <node TEXT="下注" ID="ID_522913412" CREATED="1664004532908" MODIFIED="1664381785311">
 <icon BUILTIN="button_ok"/>
@@ -237,6 +248,10 @@
 <node TEXT="自选号码" ID="ID_432572419" CREATED="1664337659126" MODIFIED="1664337662575"/>
 <node TEXT="机选号码" ID="ID_581878574" CREATED="1664337662703" MODIFIED="1664381791483">
 <icon BUILTIN="button_ok"/>
+<node TEXT="下注完之后，更新奖池信息" ID="ID_981703883" CREATED="1664451874425" MODIFIED="1664451889108"/>
+<node TEXT="选完之后记录到文件" ID="ID_1524712711" CREATED="1664469571023" MODIFIED="1664469579512">
+<icon BUILTIN="button_cancel"/>
+</node>
 </node>
 </node>
 <node TEXT="提示彩民相关彩票信息，例如售价、期数等，所有彩民登录后看到相同的彩票信息" ID="ID_197612224" CREATED="1664381814209" MODIFIED="1664381910772">
@@ -252,7 +267,9 @@
 <icon BUILTIN="button_ok"/>
 </node>
 </node>
-<node TEXT="查看历史记录" ID="ID_932544931" CREATED="1664004547442" MODIFIED="1664004550865"/>
+<node TEXT="查看购买记录" ID="ID_932544931" CREATED="1664004547442" MODIFIED="1664469647824">
+<icon BUILTIN="button_cancel"/>
+</node>
 </node>
 </node>
 <node TEXT="注册新用户" POSITION="right" ID="ID_1077785032" CREATED="1664004382103" MODIFIED="1664194025908" VGAP_QUANTITY="2 pt">
@@ -260,6 +277,9 @@
 <node TEXT="彩民注册" ID="ID_1914263206" CREATED="1664069918189" MODIFIED="1664194022596">
 <icon BUILTIN="button_ok"/>
 <node TEXT="1. 检查用户名是否唯一&#xa;2. 检查用户名密码长度是否满足条件&#xa;3. 检查两次输入的密码是否一致&#xa;&#xa;都满足则写入链表" ID="ID_1944753273" CREATED="1664080330086" MODIFIED="1664080398602" FORMAT="markdownPatternFormat"/>
+<node TEXT="注册完自动保存账号到文件" ID="ID_90757055" CREATED="1664451356269" MODIFIED="1664451367204">
+<icon BUILTIN="button_ok"/>
+</node>
 </node>
 <node TEXT="返回主菜单" ID="ID_1463729098" CREATED="1664080145945" MODIFIED="1664080322247">
 <icon BUILTIN="button_ok"/>
