@@ -14,6 +14,6 @@ void StrArrayToInt(char *str, int num[]);
 void LotteryNumberSplitting(char *sourceStr, char *targetStr[7]);
 
 //中奖比较
-int CompareResult(int winNum[7], int userNum[7]);
+int CompareResult(int *winNum, int *userNum);
 
 #endif

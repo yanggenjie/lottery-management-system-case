@@ -113,7 +113,7 @@ void SignUpUser()
     tempLTAccount.ticketNums=0;
     AddToLotteryAccount(tempLTAccount);
     //记录到文件
-    WriteLotteryAccountToBin();
+    // WriteLotteryAccountToBin();
     //销毁临时空间
     free(temp);
     printf("\n************注册成功!************\n");

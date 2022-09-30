@@ -166,19 +166,19 @@ void StrArrayToInt(char *sourceStr, int num[])
     // num[i] = atoi(tempStr[i]);
 }
 //中奖比较
-int CompareResult(int winNum[7], int userNum[7])
+int CompareResult(int *winNum, int *userNum)
 {
     // result第一个位置表示有多少个相同的红球数，
     // result第二个位置表示有多少个相同的蓝球数
     //比较红球0-5是红球，6是蓝球
-    int result[2];
+    int result[2] = {0, 0};
     int i = 0, j = 0;
     //比较6个红球
     for (i = 0; i < 6; i++)
     {
         for (j = 0; j < 6; j++)
         {
-            if (&winNum[i] == &userNum[j])
+            if (winNum[i] == userNum[j])
             {
                 result[0]++;
             }
@@ -186,7 +186,7 @@ int CompareResult(int winNum[7], int userNum[7])
         }
     }
     //比较1个蓝球
-    if (&winNum[6] == &userNum[6])
+    if (winNum[i] == userNum[j])
     {
         result[1]++;
     }
