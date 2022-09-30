@@ -3,7 +3,7 @@
 <node TEXT="彩票管理系统" LOCALIZED_STYLE_REF="AutomaticLayout.level.root" FOLDED="false" ID="ID_1090958577" CREATED="1409300609620" MODIFIED="1664470320139" VGAP_QUANTITY="2 pt">
 <hook NAME="accessories/plugins/AutomaticLayout.properties" VALUE="ALL"/>
 <font BOLD="true"/>
-<hook NAME="MapStyle" background="#f9f9f8" zoom="0.455">
+<hook NAME="MapStyle" background="#f9f9f8" zoom="1.001">
     <properties show_icon_for_attributes="true" edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff" show_notes_in_map="true" show_note_icons="true" associatedTemplateLocation="template:/light_nord_template.mm" fit_to_viewport="false"/>
 
 <map_styles>
@@ -36,7 +36,7 @@
 <stylenode LOCALIZED_TEXT="styles.user-defined" POSITION="right" STYLE="bubble">
 <stylenode LOCALIZED_TEXT="styles.important" ID="ID_915433779" BORDER_COLOR="#bf616a" FORMAT="markdownPatternFormat">
 <icon BUILTIN="yes"/>
-<arrowlink COLOR="#bf616a" TRANSPARENCY="255" DESTINATION="ID_915433779" STARTINCLINATION="66.75 pt;-21.75 pt;" ENDINCLINATION="66.75 pt;3.75 pt;"/>
+<arrowlink COLOR="#bf616a" TRANSPARENCY="255" DESTINATION="ID_915433779" STARTINCLINATION="66.75 pt;-21 pt;" ENDINCLINATION="66.75 pt;3.75 pt;"/>
 <font NAME="Ubuntu" SIZE="14"/>
 <edge COLOR="#bf616a"/>
 </stylenode>
@@ -209,6 +209,9 @@
 <node TEXT="公证员界面" ID="ID_1976271761" CREATED="1664004587642" MODIFIED="1664293070171">
 <node TEXT="开奖" ID="ID_266871431" CREATED="1664004593396" MODIFIED="1664204797352">
 <icon BUILTIN="button_ok"/>
+<node TEXT="开奖之后，自动关联中奖的用户" ID="ID_207169070" CREATED="1664537219818" MODIFIED="1664537234833"/>
+<node TEXT="若奖池达到500万，自动开奖" ID="ID_624373076" CREATED="1664537236558" MODIFIED="1664537251172"/>
+<node TEXT="中奖用户自动打钱到该用户下" ID="ID_1767068795" CREATED="1664537298065" MODIFIED="1664537312500"/>
 </node>
 <node TEXT="查看彩票发行历史" ID="ID_1706283334" CREATED="1664004599239" MODIFIED="1664204810383">
 <icon BUILTIN="button_ok"/>
@@ -248,9 +251,15 @@
 <node TEXT="自选号码" ID="ID_432572419" CREATED="1664337659126" MODIFIED="1664337662575"/>
 <node TEXT="机选号码" ID="ID_581878574" CREATED="1664337662703" MODIFIED="1664381791483">
 <icon BUILTIN="button_ok"/>
-<node TEXT="下注完之后，更新奖池信息" ID="ID_981703883" CREATED="1664451874425" MODIFIED="1664451889108"/>
+<node TEXT="下注完之后，更新奖池信息" ID="ID_981703883" CREATED="1664451874425" MODIFIED="1664537072515">
+<icon BUILTIN="button_ok"/>
+</node>
+<node TEXT="奖池更新为重扫描，即每次都从头统计，防止累加" ID="ID_967678739" CREATED="1664537084575" MODIFIED="1664537130663"/>
 <node TEXT="选完之后记录到文件" ID="ID_1524712711" CREATED="1664469571023" MODIFIED="1664469579512">
 <icon BUILTIN="button_cancel"/>
+</node>
+<node TEXT="//更新某个用户购买的彩票数、号码数" ID="ID_1805931628" CREATED="1664535458655" MODIFIED="1664535461347">
+<icon BUILTIN="button_ok"/>
 </node>
 </node>
 </node>
@@ -267,14 +276,16 @@
 <icon BUILTIN="button_ok"/>
 </node>
 </node>
-<node TEXT="查看购买记录" ID="ID_932544931" CREATED="1664004547442" MODIFIED="1664469647824">
-<icon BUILTIN="button_cancel"/>
+<node TEXT="查看购买记录" ID="ID_932544931" CREATED="1664004547442" MODIFIED="1664522584955">
+<icon BUILTIN="button_ok"/>
+<node TEXT="查看本期购买记录" ID="ID_1388955573" CREATED="1664537179498" MODIFIED="1664537185810"/>
+<node TEXT="查看历史购买记录" ID="ID_491991519" CREATED="1664537186229" MODIFIED="1664537197810"/>
 </node>
 </node>
 </node>
 <node TEXT="注册新用户" POSITION="right" ID="ID_1077785032" CREATED="1664004382103" MODIFIED="1664194025908" VGAP_QUANTITY="2 pt">
 <icon BUILTIN="button_ok"/>
-<node TEXT="彩民注册" ID="ID_1914263206" CREATED="1664069918189" MODIFIED="1664194022596">
+<node TEXT="彩民注册" FOLDED="true" ID="ID_1914263206" CREATED="1664069918189" MODIFIED="1664194022596">
 <icon BUILTIN="button_ok"/>
 <node TEXT="1. 检查用户名是否唯一&#xa;2. 检查用户名密码长度是否满足条件&#xa;3. 检查两次输入的密码是否一致&#xa;&#xa;都满足则写入链表" ID="ID_1944753273" CREATED="1664080330086" MODIFIED="1664080398602" FORMAT="markdownPatternFormat"/>
 <node TEXT="注册完自动保存账号到文件" ID="ID_90757055" CREATED="1664451356269" MODIFIED="1664451367204">

@@ -5,6 +5,8 @@ typedef struct
 {
 	unsigned issueNum;//发行期号
 	unsigned short status;//开奖状态
+	short winStatus;//本张彩票中奖状态
+	// unsigned short winLevel;//中奖等级
 	char numStr[5][22]; //单张彩票最多5组号码
 } SoldCommData;
 

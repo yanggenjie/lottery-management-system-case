@@ -34,6 +34,7 @@ typedef struct
     LTSoldDataLinkedList *soldDataCurrent;//彩票号码当前节点关联账户
     unsigned tickets;//购买的彩票张数
     unsigned ticketNums;//购买的彩票号码数
+    unsigned winer;
 } LotteryData;
 
 struct lottery

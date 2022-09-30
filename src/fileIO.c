@@ -20,9 +20,9 @@ void InitConfig()
     //初始化管理员账号
     InitAdminAccount();
     // //读取彩民账号
-    // ReadLotteryAccountFromBin();
-    // //读取彩票发行信息
-    // ReadLotteryTicketInfoFromBin();
+    ReadLotteryAccountFromBin();
+    //读取彩票发行信息
+    ReadLotteryTicketInfoFromBin();
 }
 
 /********************************/
