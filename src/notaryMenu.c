@@ -1,5 +1,6 @@
 #include "adminMenu.h"
 #include "notaryMenu.h"
+#include "fileIO.h"
 #include <stdio.h>
 #include <string.h>
 //彩票发行信息
@@ -17,8 +18,9 @@ void NotaryMenu()
     {
         printf("\n*******************************************\n");
         printf("\t1.开奖\n");
-        printf("\t2.查看彩票发行历史\n");
-        printf("\t3.退出登录\n");
+        printf("\t2.查看当期信息\n");
+        printf("\t3.查看发行历史\n");
+        printf("\t4.退出登录\n");
         printf("\n*******************************************\n");
         printf("请选择功能：");
         int choose = RecStringConverToInt();
@@ -26,11 +28,24 @@ void NotaryMenu()
         {
         case 1:
             ReleaseResults();
+            //同步用户彩票的开奖信息
+            //保存发行信息文件
+            WriteReleaseDataToBin();
             break;
         case 2:
-            ReleaseView();
+            DisplaySingleReleaseData(releaseDataCurrent);
             break;
         case 3:
+            ReleaseView();
+            //更新文件信息
+            //更新奖池，即发行信息文件
+            WriteReleaseDataToBin();
+            //更新彩民账号信息
+            WriteLotteryAccountToBin();
+            //更新购买彩票上的信息
+            WriteBoughtHistoryToFile();
+            break;
+        case 4:
             return;
         default:
             break;
@@ -49,24 +64,20 @@ void ReleaseResults()
         printf("尚未发行任何彩票!\n");
         return;
     }
-    if (releaseDataCurrent->data.status)
+    if (releaseDataCurrent->data.status == 1)
     {
         printf("本期已开奖!\n");
         printf("本期中奖号码为:%s\n", releaseDataCurrent->data.winResult);
-        ShowWinner();
+        // ShowWinner();
         return;
     }
-    else
-    {
-        releaseDataCurrent->data.status = 1;
-        printf("开奖成功!\n");
-        printf("本期中奖号码为:%s\n", releaseDataCurrent->data.winResult);
-        //打印中奖用户，并直接发放三等奖到六等奖的奖金
-        ShowWinner();
-        //发完所有低等奖奖金之后，用奖池剩余的奖金分发到一等奖、二等奖用户
-        DistributeAdvanceBonus();
-        return;
-    }
+    releaseDataCurrent->data.status = 1;
+    printf("开奖成功!\n");
+    printf("本期中奖号码为:%s\n", releaseDataCurrent->data.winResult);
+    //打印中奖用户，并直接发放三等奖到六等奖的奖金
+    ShowWinner();
+    //发完所有低等奖奖金之后，用奖池剩余的奖金分发到一等奖、二等奖用户
+    DistributeAdvanceBonus();
 }
 
 //中奖用户
@@ -74,11 +85,6 @@ void ShowWinner()
 {
     //遍历所有用户的购买号码看是否和当前中奖号码相同
     LotteryAccountLinkedList *user = userHead;
-    TicketDataLinkedList *userSoldData = user->data.soldDataHead;
-    //先把中奖的号码取出来放到winResult,0-5存放红球，6放蓝球
-    int winResult[7] = {0};
-    char empty[22] = {'\0'};
-    StrArrayToInt(releaseDataCurrent->data.winResult, winResult);
     if (userHead == NULL)
     {
         printf("没有中奖用户\n");
@@ -86,84 +92,90 @@ void ShowWinner()
     //遍历所有用户
     while (user != NULL)
     {
-        //如果当前用户没有购买记录，直接换下一个用户
-        if (userSoldData == NULL)
-        {
-            user = user->next;
-            continue;
-        }
-        //如果有记录，遍历当前用户的购买的所有号码
-        while (userSoldData != NULL)
-        {
-            //遍历第一张彩票的号码
-            for (int i = 0; strcmp(userSoldData->data.numStr[i], empty) != 0; i++)
-            {
-                int userNum[7] = {0};
-                //取出用户第i个号码，存放到userNum中。
-                StrArrayToInt(userSoldData->data.numStr[i], userNum);
-                //比较
-                int finalResult = CompareResult(winResult, userNum);
-                switch (finalResult)
-                { //一等奖二等奖需要等所有低等奖的奖金发放完之后，再计算
-                case 1:
-                    printf("一等奖用户:%s\n", user->data.account.name);
-                    releaseDataCurrent->data.winLevelCount[0]++; //统计一等奖数量，下同
-                    userSoldData->data.winStatus = 1;   //记录到购买的彩票上，下同
-                    user->data.AdvanceAward[0] = 1;     //标记为1等奖
-                    break;
-                case 2:
-                    printf("二等奖用户:%s\n", user->data.account.name);
-                    releaseDataCurrent->data.winLevelCount[1]++;
-                    userSoldData->data.winStatus = 2;
-                    user->data.AdvanceAward[1] = 2; //标记为2等奖
-                    break;
-                case 3:
-                    printf("三等奖用户:%s\n", user->data.account.name);
-                    releaseDataCurrent->data.winLevelCount[2]++;
-                    user->data.balance += 3000; //三等奖到六等奖的用户直接打钱，下同
-                    userSoldData->data.winStatus = 3;
-                    break;
-                case 4:
-                    printf("四等奖用户:%s\n", user->data.account.name);
-                    releaseDataCurrent->data.winLevelCount[3]++;
-                    user->data.balance += 200;
-                    userSoldData->data.winStatus = 4;
-                    break;
-                case 5:
-                    printf("五等奖用户:%s\n", user->data.account.name);
-                    releaseDataCurrent->data.winLevelCount[4]++;
-                    user->data.balance += 10;
-                    userSoldData->data.winStatus = 5;
-                    break;
-                case 6:
-                    printf("六等奖用户:%s\n", user->data.account.name);
-                    releaseDataCurrent->data.winLevelCount[5]++;
-                    user->data.balance += 5;
-                    userSoldData->data.winStatus = 6;
-                    break;
-                default:
-                    break;
-                }
-            }
-            //换下一张彩票
-            userSoldData = userSoldData->next;
-        }
-
+        //遍历单个用户的数据
+        TicketDataCheck(user);
+        //换下一个用户的
         user = user->next;
     }
 }
 
-//字符串转整形
+//字符串转整型
 void StrArrayToInt(char *sourceStr, int num[])
 {
-    //转成整形
-    // char tempStr[7];
-    int i = 0;
     //拆分字符保存到tempStr
     sscanf(sourceStr, "%d-%d-%d-%d-%d-%d-%d",
            &num[0], &num[1], &num[2],
            &num[3], &num[4], &num[5],
            &num[6]);
+}
+
+//遍历单个用户的彩票数据
+
+void TicketDataCheck(LotteryAccountLinkedList *user)
+{
+    TicketDataLinkedList *useTicketData = user->data.ticketDataHead;
+    //先把中奖的号码取出来放到winResult,0-5存放红球，6放蓝球
+    int winResult[7] = {0};
+    char empty[22] = {'\0'};
+    StrArrayToInt(releaseDataCurrent->data.winResult, winResult);
+    //遍历当前用户的购买的所有号码
+    while (useTicketData != NULL)
+    {
+        //同步彩票开奖状态
+        useTicketData->data.status = releaseDataCurrent->data.status;
+        //遍历第一张彩票的所有号码
+        for (int i = 0; strcmp(useTicketData->data.numStr[i], empty) != 0; i++)
+        {
+            int userNum[7] = {0};
+            //取出用户第i组号码，存放到userNum中。
+            StrArrayToInt(useTicketData->data.numStr[i], userNum);
+            //比较
+            int finalResult = CompareResult(winResult, userNum);
+            switch (finalResult)
+            { //一等奖二等奖需要等所有低等奖的奖金发放完之后，再计算
+            case 1:
+                printf("一等奖用户:%s\n", user->data.account.name);
+                releaseDataCurrent->data.winLevelCount[0]++; //统计一等奖数量，下同
+                useTicketData->data.winLevel = 1;            //标记彩票中奖等级
+                user->data.AdvanceAward = 1;                 //标记用户中奖等级
+                break;
+            case 2:
+                printf("二等奖用户:%s\n", user->data.account.name);
+                releaseDataCurrent->data.winLevelCount[1]++;
+                useTicketData->data.winLevel = 2; //标记彩票中奖等级
+                user->data.AdvanceAward = 2;      //标记用户中奖等级
+                break;
+            case 3:
+                printf("三等奖用户:%s\n", user->data.account.name);
+                releaseDataCurrent->data.winLevelCount[2]++;
+                user->data.balance += 3000;       //打钱
+                useTicketData->data.winLevel = 3; //标记彩票中奖等级
+                break;
+            case 4:
+                printf("四等奖用户:%s\n", user->data.account.name);
+                releaseDataCurrent->data.winLevelCount[3]++;
+                user->data.balance += 200;        //打钱
+                useTicketData->data.winLevel = 4; //标记彩票中奖等级
+                break;
+            case 5:
+                printf("五等奖用户:%s\n", user->data.account.name);
+                releaseDataCurrent->data.winLevelCount[4]++;
+                user->data.balance += 10;         //打钱
+                useTicketData->data.winLevel = 5; //标记彩票中奖等级
+                break;
+            case 6:
+                printf("六等奖用户:%s\n", user->data.account.name);
+                releaseDataCurrent->data.winLevelCount[5]++;
+                user->data.balance += 5;          //打钱
+                useTicketData->data.winLevel = 6; //标记彩票中奖等级
+                break;
+            default:
+                break;
+            }
+        }
+        //换下一张彩票
+        useTicketData = useTicketData->next;
+    }
 }
 //中奖比较
 int CompareResult(int *winNum, int *userNum)
@@ -182,7 +194,6 @@ int CompareResult(int *winNum, int *userNum)
             {
                 result[0]++;
             }
-            // continue;
         }
     }
     //比较1个蓝球
@@ -273,12 +284,12 @@ void DistributeAdvanceBonus()
     while (user != NULL)
     {
         // 当前用户中一等奖，分发奖金
-        if (user->data.AdvanceAward[0] == 1)
+        if (user->data.AdvanceAward == 1)
         {
             user->data.balance += firstPrizeBonus;
         }
         // 当前用户中二等奖，分发奖金
-        if (user->data.AdvanceAward[1] == 2)
+        if (user->data.AdvanceAward == 2)
         {
             user->data.balance += secondPrizeBonus;
         }

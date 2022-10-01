@@ -19,9 +19,11 @@ void InitConfig()
 {
     //初始化管理员账号
     InitAdminAccount();
+    //初始化彩民账号
+    InitNotaryAccount();
     //读取彩民账号
     ReadLotteryAccountFromBin();
-    //读取彩票发行信息
+    // 读取彩票发行信息
     ReadReleaseDataFromBin();
 }
 
@@ -30,15 +32,16 @@ void InitConfig()
 //保存彩民账号
 void WriteLotteryAccountToBin()
 {
+    char filePath[100] = "data/LotteryAccount";
     //打开文件
-    FILE *writeFile = fopen("data/LotteryAccount.dat", "wb");
+    FILE *writeFile = fopen(filePath, "wb");
     if (writeFile == NULL)
     {
-        perror("data/LotteryAccount.dat");
+        perror(filePath);
         exit(EXIT_FAILURE);
     }
+    //保存账号数据
     LotteryAccountLinkedList *user = userHead;
-    //写入账号数据
     while (user != NULL)
     {
         fwrite(&user->data, sizeof(LotteryData), 1, writeFile);
@@ -51,22 +54,28 @@ void WriteLotteryAccountToBin()
 //读取彩民账号
 void ReadLotteryAccountFromBin()
 {
-    //追加打开文件，关闭，防止一开始数据不存在的时候，可以自动创建空文件
-    FILE *temp = fopen("data/LotteryAccount.dat", "a+");
-    fclose(temp);
+    char filePath[100] = "data/LotteryAccount";
     //打开文件
-    FILE *readFile = fopen("data/LotteryAccount.dat", "r");
+    FILE *readFile = fopen(filePath, "rb");
     if (readFile == NULL)
     {
-        perror("data/LotteryAccount.dat");
-        exit(EXIT_FAILURE);
+        perror(filePath);
+        // exit(EXIT_FAILURE);
+        return;
     }
     //读取数据、创建链表
     LotteryData dataFromFile;
     while (fread(&dataFromFile, sizeof(LotteryData), 1, readFile) > 0)
     {
-        AddToLotteryAccount(dataFromFile);
+        // //初始化用户的彩票购买历史的头指针,
+        // //之后，在登录成功时，读取历史记录文件，再重新关联历史记录
+        // dataFromFile.ticketDataHead = NULL;
+        // dataFromFile.ticketDataCurrent == NULL;
+        //添加数据到链表
+        AddToLotteryAccountLinkedList(dataFromFile);
     }
+    //关闭文件
+    fclose(readFile);
 }
 
 /********************************/
@@ -74,14 +83,15 @@ void ReadLotteryAccountFromBin()
 //保存发行信息表
 void WriteReleaseDataToBin()
 {
+    char filePath[100] = "data/LotteryTicket";
     //打开文件
-    FILE *writeFile = fopen("data/LotteryTicket.dat", "wb");
+    FILE *writeFile = fopen(filePath, "wb");
     if (writeFile == NULL)
     {
-        perror("data/LotteryTicket.dat");
+        perror(filePath);
         exit(EXIT_FAILURE);
     }
-    //写入发行信息
+    //保存发行数据
     ReleaseDataLinkedlist *releaseData = releaseDataHead;
     while (releaseData != NULL)
     {
@@ -95,68 +105,82 @@ void WriteReleaseDataToBin()
 //读取彩票发行信息
 void ReadReleaseDataFromBin()
 {
-    //追加打开文件，关闭，防止一开始数据不存在的时候，可以自动创建空文件
-    FILE *temp = fopen("data/LotteryTicket.dat", "a+");
-    fclose(temp);
+    char filePath[100] = "data/LotteryTicket";
     //打开文件
-    FILE *readFile = fopen("data/LotteryTicket.dat", "rb");
+    FILE *readFile = fopen(filePath, "rb");
     if (readFile == NULL)
     {
-        perror("data/Lottery.dat");
-        exit(EXIT_FAILURE);
+        perror(filePath);
+        // exit(EXIT_FAILURE);
+        return;
     }
+
     //读取数据、创建链表
     ReleaseData dataFromFile;
     while (fread(&dataFromFile, sizeof(ReleaseData), 1, readFile) > 0)
     {
         //增加到彩票链表
-        AddToLottertTickeyLinkedList(dataFromFile);
+        AddToReleaseDataLinkedList(dataFromFile);
     }
+
+    //关闭文件
+    fclose(readFile);
 }
 
-//保存购买历史
+//保存用户购买历史
 void WriteBoughtHistoryToFile()
 {
-    char fileName[100] = "data/boughtHistory";
-    strcat(fileName, lotteryCurrentLogin->data.account.name);
-    //打开和关闭文件的假动作,如果一开始没有配置,会自动生成空配置
-    FILE *t = fopen(fileName, "ab");
-    fclose(t);
-    FILE *outputData = fopen(fileName, "wb");
-    if (outputData == NULL)
+    //自定义用户特有的文件名
+    char filePath[100] = "data/boughtHistory_";
+    strcat(filePath, lotteryCurrentLogin->data.account.name);
+
+    //打开文件
+    FILE *writeFile = fopen(filePath, "wb");
+    if (writeFile == NULL)
     {
-        perror(fileName);
+        perror(filePath);
         exit(EXIT_FAILURE);
     }
-    TicketDataLinkedList *temp = lotteryCurrentLogin->data.soldDataHead;
-    if (temp == NULL)
+
+    //保存购买历史数据
+    TicketDataLinkedList *ticketData = lotteryCurrentLogin->data.ticketDataHead;
+    while (ticketData != NULL)
     {
-        fwrite(&temp->data, sizeof(temp->data), 0, outputData);
-        printf("没有数据被写入\n");
+        fwrite(&ticketData->data, sizeof(TicketData), 1, writeFile);
+        ticketData = ticketData->next;
     }
-    while (temp != NULL)
-    {
-        fwrite(&temp->data, sizeof(temp->data), 0, outputData);
-        temp = temp->next;
-    }
+
+    //关闭文件
+    fclose(writeFile);
 }
 
-//读取购买历史
+//读取用户购买历史
 void ReadBoughtHistoryFromFile()
 {
-    char fileName[100] = "data/boughtHistory";
-    strcat(fileName, lotteryCurrentLogin->data.account.name);
-    FILE *inputData = fopen(fileName, "rb");
-    if (inputData == NULL)
+    //自定义用户特有的文件名
+    char filePath[100] = "data/boughtHistory_";
+    strcat(filePath, lotteryCurrentLogin->data.account.name);
+    //打开文件
+    FILE *readFile = fopen(filePath, "rb");
+    if (readFile == NULL)
     {
-        perror(fileName);
+        perror(filePath);
         // exit(EXIT_FAILURE);
         return;
     }
-    TicketData newData;
-    while (fread(&newData, sizeof(newData), 1, inputData) > 0)
+    //读取数据、创建链表
+    TicketData ticketDataFromFile;
+
+    //初始化当前用户的彩票信息头指针，
+    //这样下面在执行的时候才会把读取的第一个数据关联到当前登录用户
+    lotteryCurrentLogin->data.ticketDataHead = NULL;
+    lotteryCurrentLogin->data.ticketDataCurrent = NULL;
+    while (fread(&ticketDataFromFile, sizeof(TicketData), 1, readFile))
     {
         //添加到当前用户的历史链表
-        AddSoldDataToLinkedlist(newData);
+        AddToTicketDataLinkedList(ticketDataFromFile);
     }
+
+    //关闭文件
+    fclose(readFile);
 }

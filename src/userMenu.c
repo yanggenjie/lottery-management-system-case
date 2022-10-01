@@ -33,25 +33,35 @@ void UserMenu()
         switch (choose)
         {
         case 1:
-            ViewPersonalInfo();
+            DisplaySingleLotteryInfo(lotteryCurrentLogin);
             break;
         case 2:
             ChangePassword();
+            //保存彩民账号文件
+            WriteLotteryAccountToBin();
             break;
         case 3:
             Recharge();
+            //保存彩民账号文件
+            WriteLotteryAccountToBin();
             break;
         case 4:
             Bet();
+            //保存发行信息文件
+            WriteReleaseDataToBin();
+            //保存彩民账号文件
+            WriteLotteryAccountToBin();
+            //保存彩民购买的彩票历史
+            WriteBoughtHistoryToFile();
             break;
         case 5:
             DisplayUserBoughtData(lotteryCurrentLogin);
             break;
         case 6:
-            DeleteAccount();
+            DeleteLotteryAccount();
             //更新彩民账号文件
             WriteLotteryAccountToBin();
-            //退出登录
+            // 退出登录
             return;
         case 7:
             return;
@@ -60,15 +70,7 @@ void UserMenu()
         }
     }
 }
-//查看个人信息
-void ViewPersonalInfo()
-{
-    printf("当前账号：%s\t", lotteryCurrentLogin->data.account.name);
-    printf("账户余额：%.2f\n", lotteryCurrentLogin->data.balance);
-    printf("您当前购买了%d张彩票\n",lotteryCurrentLogin->data.tickets);
-    printf("累计下注%d个号码\n",lotteryCurrentLogin->data.ticketNums);
 
-}
 //修改密码
 void ChangePassword()
 {
@@ -96,8 +98,6 @@ void ChangePassword()
                 strcpy(lotteryCurrentLogin->data.account.pwd, newPasswd1);
                 printf("密码修改成功,新密码为：%s\n", lotteryCurrentLogin->data.account.pwd);
                 printf("下次登录生效，请尽快使用新密码重新登录\n");
-                //更新到文件
-                WriteBoughtHistoryToFile();
                 return;
             }
             else
@@ -128,8 +128,6 @@ void Recharge()
     lotteryCurrentLogin->data.balance += rechargeNum;
     printf("充值成功!\n");
     printf("当前余额:%.2f\n", lotteryCurrentLogin->data.balance);
-    //更新文件
-    WriteLotteryAccountToBin();
 }
 
 /********************************/
@@ -147,7 +145,7 @@ void Bet()
     }
     //如果存在发行的彩票，显示发行信息
     printf("\n当前发行期数为%d,具体信息如下:", releaseDataCurrent->data.issue);
-    DisplayLotteryTicketInfo(releaseDataCurrent);
+    DisplaySingleReleaseData(releaseDataCurrent);
 
     //如果当前发行已经开奖，不能下注，只能下注未开奖的
     if (releaseDataCurrent->data.status)
@@ -196,24 +194,22 @@ void Bet()
     }
     //选完更新余额
     lotteryCurrentLogin->data.balance -= number * releaseDataCurrent->data.price;
-    //更新当前用户的数据
+    //更新某个用户购买的彩票数、号码数
     UpdateUserTicketsAndNumbers(lotteryCurrentLogin);
     //更新奖池信息
     UpdatePrizePool();
-    //更新发行信息文件
-    WriteReleaseDataToBin();
-    //更新彩民账号文件
-    WriteLotteryAccountToBin();
 }
 
 //机选号码
 void MachineSelection(int n)
 {
     TicketData newSoldData;
-    //记录当前发行号
+    //初始化彩票发行号
     newSoldData.issueNum = releaseDataCurrent->data.issue;
-    //记录当前发行的开奖状态
+    //初始化彩票开奖状态
     newSoldData.status = releaseDataCurrent->data.status;
+    //初始化中奖等级
+    newSoldData.winLevel = 0;
     //生成彩票及号码数据
     //下注5个号码以内(包含5)
     if (n <= 5)
@@ -229,7 +225,7 @@ void MachineSelection(int n)
             strcpy(newSoldData.numStr[i], nums);
         }
         //添加数据到链表
-        AddSoldDataToLinkedlist(newSoldData);
+        AddToTicketDataLinkedList(newSoldData);
     }
     //下注超过5个号,拆分多张彩票
     if (n > 5)
@@ -247,32 +243,32 @@ void MachineSelection(int n)
                 strcpy(newSoldData.numStr[j], nums);
             }
             //添加数据到链表
-            AddSoldDataToLinkedlist(newSoldData);
+            AddToTicketDataLinkedList(newSoldData);
         }
     }
     //显示下注结果
     DisplaySelectedResult();
 }
 
-//添加到售出数据到链表
-void AddSoldDataToLinkedlist(TicketData newData)
+//添加到彩票数据链表
+void AddToTicketDataLinkedList(TicketData newData)
 {
     //申请新节点
     TicketDataLinkedList *newNode = malloc(sizeof(TicketDataLinkedList));
     //初始化
     newNode->data = newData;
     newNode->next = NULL;
-    //将新节点连接到链表中
-    if (lotteryCurrentLogin->data.soldDataHead == NULL)
+    //将新节点连接到链表中，关联到当前登录用户
+    if (lotteryCurrentLogin->data.ticketDataHead == NULL)
     {
         //没有头节点,标记为头节点
-        lotteryCurrentLogin->data.soldDataHead = newNode;
-        lotteryCurrentLogin->data.soldDataCurrent = newNode;
+        lotteryCurrentLogin->data.ticketDataHead = newNode;
+        lotteryCurrentLogin->data.ticketDataCurrent = newNode;
         return;
     }
     //已存在头节点,连接到节点尾部
-    lotteryCurrentLogin->data.soldDataCurrent->next = newNode;
-    lotteryCurrentLogin->data.soldDataCurrent = newNode;
+    lotteryCurrentLogin->data.ticketDataCurrent->next = newNode;
+    lotteryCurrentLogin->data.ticketDataCurrent = newNode;
 }
 
 //生成随机数
@@ -324,7 +320,7 @@ int CheckBetNumberUniqueness(char nums[])
     while (user != NULL)
     {
         //判断当前用户购买的彩票信息是否存在
-        if (user->data.soldDataHead == NULL)
+        if (user->data.ticketDataHead == NULL)
         {
             //不存在结束当前循环，遍历下一个账号
             user = user->next;
@@ -333,7 +329,7 @@ int CheckBetNumberUniqueness(char nums[])
         //如果存在，则遍历当前账号在本期购买的号码
         for (int i = 0; i < 5; i++)
         {
-            if (strcmp(nums, user->data.soldDataCurrent->data.numStr[i]) == 0)
+            if (strcmp(nums, user->data.ticketDataCurrent->data.numStr[i]) == 0)
             {
                 return 1;
             }
@@ -348,7 +344,7 @@ int CheckBetNumberUniqueness(char nums[])
 void DisplaySelectedResult()
 {
     printf("----------------------------\n");
-    printf("下注成功，请到购买记录查看详情。\n\n");
+    printf("下注成功，请到==购买记录==查看详情。\n\n");
     printf("感谢使用彩票管理系统，敬请期待开奖结果!\n");
     printf("----------------------------\n");
 }
@@ -356,7 +352,7 @@ void DisplaySelectedResult()
 //显示某个用户的购买记录
 void DisplayUserBoughtData(LotteryAccountLinkedList *user)
 {
-    TicketDataLinkedList *userSoldData = user->data.soldDataHead;
+    TicketDataLinkedList *userSoldData = user->data.ticketDataHead;
     if (userSoldData == NULL)
     {
         printf("没有购买过任何彩票\n");
@@ -378,9 +374,10 @@ void DisplayUserBoughtData(LotteryAccountLinkedList *user)
         {
             printf("开奖状态：未开奖\n");
         }
-        if (userSoldData->data.winStatus)
+
+        if (userSoldData->data.winLevel)
         {
-            printf("中奖状态：%d等奖\n", userSoldData->data.winStatus);
+            printf("中奖状态：%d等奖\n", userSoldData->data.winLevel);
         }
         else
         {
@@ -401,7 +398,7 @@ void DisplayUserBoughtData(LotteryAccountLinkedList *user)
 //更新某个用户购买的彩票数、号码数
 void UpdateUserTicketsAndNumbers(LotteryAccountLinkedList *user)
 {
-    TicketDataLinkedList *userSoldData = user->data.soldDataHead;
+    TicketDataLinkedList *userSoldData = user->data.ticketDataHead;
     //统计之前，重置数据
     lotteryCurrentLogin->data.tickets = 0;
     lotteryCurrentLogin->data.ticketNums = 0;

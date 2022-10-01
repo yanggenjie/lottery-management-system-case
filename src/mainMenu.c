@@ -6,11 +6,11 @@
 #include <time.h>
 int main()
 {
+    srand((unsigned)time(NULL)); //随机数生成
     //初始化配置文件
     InitConfig();
-    srand((unsigned)time(NULL)); //随机数生成
     //主菜单
-    while (1)
+    for(;;)
     {
         printf("\n\n*******************************************\n");
         printf("\n\t欢迎使用彩票管理系统\n\n");
@@ -23,10 +23,10 @@ int main()
         switch (choose)
         {
         case 1:
-            SignIn();
+            SignInMenu();
             break;
         case 2:
-            SignUp();
+            SignUpMenu();
             break;
         case 3:
             exit(0);

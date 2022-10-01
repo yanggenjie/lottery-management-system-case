@@ -123,3 +123,47 @@ Program received signal SIGINT, Interrupt.
 No symbol "ticketNums" in current context.
 The history is empty.
 Quit
+
+warning: Currently logging to gdb.txt.  Turn the logging off and on to make the new setting effective.
+Reading symbols from bin/Ticket...done.
+Starting program: /media/workspace/第一阶段项目/彩票管理系统/bin/Ticket 
+
+Program received signal SIGSEGV, Segmentation fault.
+0x0000555555558092 in DisplayUserBoughtData (user=0x55555575e560) at src/userMenu.c:376
+376	        printf("发行期数:%d\n", userSoldData->data.issueNum);
+Quit
+
+warning: Currently logging to gdb.txt.  Turn the logging off and on to make the new setting effective.
+Reading symbols from bin/Ticket...done.
+Starting program: /media/workspace/第一阶段项目/彩票管理系统/bin/Ticket 
+
+Program received signal SIGINT, Interrupt.
+0x00007ffff7af2031 in __GI___libc_read (fd=0, buf=0x555555760c70, nbytes=1024) at ../sysdeps/unix/sysv/linux/read.c:27
+27	../sysdeps/unix/sysv/linux/read.c: No such file or directory.
+
+warning: Currently logging to gdb.txt.  Turn the logging off and on to make the new setting effective.
+Starting program:  
+No executable file specified.
+Use the "file" or "exec-file" command.
+Undefined command: "exit".  Try "help".
+
+warning: Currently logging to gdb.txt.  Turn the logging off and on to make the new setting effective.
+Reading symbols from bin/Ticket...done.
+Starting program: /media/workspace/第一阶段项目/彩票管理系统/bin/Ticket 
+
+Program received signal SIGINT, Interrupt.
+0x00007ffff7af2031 in __GI___libc_read (fd=0, buf=0x55555575d8f0, nbytes=1024) at ../sysdeps/unix/sysv/linux/read.c:27
+27	../sysdeps/unix/sysv/linux/read.c: No such file or directory.
+
+warning: Currently logging to gdb.txt.  Turn the logging off and on to make the new setting effective.
+Starting program:  
+No executable file specified.
+Use the "file" or "exec-file" command.
+
+warning: Currently logging to gdb.txt.  Turn the logging off and on to make the new setting effective.
+Reading symbols from bin/Ticket...done.
+Starting program: /media/workspace/第一阶段项目/彩票管理系统/bin/Ticket 
+
+Program received signal SIGSEGV, Segmentation fault.
+__strcmp_sse2_unaligned () at ../sysdeps/x86_64/multiarch/strcmp-sse2-unaligned.S:32
+32	../sysdeps/x86_64/multiarch/strcmp-sse2-unaligned.S: No such file or directory.
