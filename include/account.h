@@ -33,8 +33,8 @@ typedef struct
     unsigned tickets;                      //购买的彩票张数
     unsigned ticketNums;                   //购买的彩票号码数
     unsigned short AdvanceAward[2];        //仅用于标记一等奖、二等奖
-    LTSoldDataLinkedList *soldDataHead;    //彩票号码头节点关联账户
-    LTSoldDataLinkedList *soldDataCurrent; //彩票号码当前节点关联账户
+    TicketDataLinkedList *soldDataHead;    //彩票号码头节点关联账户
+    TicketDataLinkedList *soldDataCurrent; //彩票号码当前节点关联账户
 } LotteryData;
 
 struct lottery

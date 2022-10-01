@@ -12,8 +12,8 @@ extern LotteryAccountLinkedList *lotteryCurrentLogin;
 extern LotteryAccountLinkedList *userHead;
 extern LotteryAccountLinkedList *userCurrent;
 // 彩票发行信息
-extern TicktetLinkedList *LTHead;
-extern TicktetLinkedList *LTCurrent;
+extern ReleaseDataLinkedlist *releaseDataHead;
+extern ReleaseDataLinkedlist *releaseDataCurrent;
 
 //彩民客户端主界面
 void UserMenu()
@@ -37,7 +37,7 @@ void UserMenu()
             break;
         case 2:
             ChangePassword();
-            return;
+            break;
         case 3:
             Recharge();
             break;
@@ -49,6 +49,9 @@ void UserMenu()
             break;
         case 6:
             DeleteAccount();
+            //更新彩民账号文件
+            WriteLotteryAccountToBin();
+            //退出登录
             return;
         case 7:
             return;
@@ -61,7 +64,10 @@ void UserMenu()
 void ViewPersonalInfo()
 {
     printf("当前账号：%s\t", lotteryCurrentLogin->data.account.name);
-    printf("余额：%.2f\n", lotteryCurrentLogin->data.balance);
+    printf("账户余额：%.2f\n", lotteryCurrentLogin->data.balance);
+    printf("您当前购买了%d张彩票\n",lotteryCurrentLogin->data.tickets);
+    printf("累计下注%d个号码\n",lotteryCurrentLogin->data.ticketNums);
+
 }
 //修改密码
 void ChangePassword()
@@ -88,8 +94,10 @@ void ChangePassword()
             if (strcmp(newPasswd1, newPasswd2) == 0)
             {
                 strcpy(lotteryCurrentLogin->data.account.pwd, newPasswd1);
-                printf("密码修改成功,请重新登录\n");
-                //连续退出到登录界面
+                printf("密码修改成功,新密码为：%s\n", lotteryCurrentLogin->data.account.pwd);
+                printf("下次登录生效，请尽快使用新密码重新登录\n");
+                //更新到文件
+                WriteBoughtHistoryToFile();
                 return;
             }
             else
@@ -121,7 +129,7 @@ void Recharge()
     printf("充值成功!\n");
     printf("当前余额:%.2f\n", lotteryCurrentLogin->data.balance);
     //更新文件
-    // WriteLotteryAccountToBin();
+    WriteLotteryAccountToBin();
 }
 
 /********************************/
@@ -130,7 +138,7 @@ void Recharge()
 void Bet()
 {
     //判断当前是否有彩票发行
-    if (LTHead == NULL)
+    if (releaseDataHead == NULL)
     {
         printf("------------------------------------------\n");
         printf("尚未发行任何彩票，无法使用下注功能，请关注后续公告\n");
@@ -138,11 +146,11 @@ void Bet()
         return;
     }
     //如果存在发行的彩票，显示发行信息
-    printf("\n当前发行期数为%d,具体信息如下:", LTCurrent->data.issue);
-    DisplayLotteryTicketInfo(LTCurrent);
+    printf("\n当前发行期数为%d,具体信息如下:", releaseDataCurrent->data.issue);
+    DisplayLotteryTicketInfo(releaseDataCurrent);
 
     //如果当前发行已经开奖，不能下注，只能下注未开奖的
-    if (LTCurrent->data.status)
+    if (releaseDataCurrent->data.status)
     {
         printf("------------------------------------------\n");
         printf("当前彩票期数已经开奖了，无法下注，请关注后续公告\n");
@@ -162,10 +170,10 @@ void Bet()
 
     //如果余额不足，无法进行下注，先提示充值
     //当前余额 - 单价*注数 < 0,说明余额不足
-    int condition1 = (lotteryCurrentLogin->data.balance - LTCurrent->data.price * number) < 0;
+    int condition1 = (lotteryCurrentLogin->data.balance - releaseDataCurrent->data.price * number) < 0;
     if (condition1)
     {
-        printf("您购买%d注号码，预计%d元\n", number, LTCurrent->data.price * number);
+        printf("您购买%d注号码，预计%d元\n", number, releaseDataCurrent->data.price * number);
         printf("您当前余额为:%.2f，余额不足，请先进行充值。\n", lotteryCurrentLogin->data.balance);
         return;
     }
@@ -187,21 +195,25 @@ void Bet()
         break;
     }
     //选完更新余额
-    lotteryCurrentLogin->data.balance -= number * LTCurrent->data.price;
+    lotteryCurrentLogin->data.balance -= number * releaseDataCurrent->data.price;
     //更新当前用户的数据
     UpdateUserTicketsAndNumbers(lotteryCurrentLogin);
     //更新奖池信息
     UpdatePrizePool();
+    //更新发行信息文件
+    WriteReleaseDataToBin();
+    //更新彩民账号文件
+    WriteLotteryAccountToBin();
 }
 
 //机选号码
 void MachineSelection(int n)
 {
-    SoldCommData newSoldData;
+    TicketData newSoldData;
     //记录当前发行号
-    newSoldData.issueNum = LTCurrent->data.issue;
+    newSoldData.issueNum = releaseDataCurrent->data.issue;
     //记录当前发行的开奖状态
-    newSoldData.status = LTCurrent->data.status;
+    newSoldData.status = releaseDataCurrent->data.status;
     //生成彩票及号码数据
     //下注5个号码以内(包含5)
     if (n <= 5)
@@ -243,10 +255,10 @@ void MachineSelection(int n)
 }
 
 //添加到售出数据到链表
-void AddSoldDataToLinkedlist(SoldCommData newData)
+void AddSoldDataToLinkedlist(TicketData newData)
 {
     //申请新节点
-    LTSoldDataLinkedList *newNode = malloc(sizeof(LTSoldDataLinkedList));
+    TicketDataLinkedList *newNode = malloc(sizeof(TicketDataLinkedList));
     //初始化
     newNode->data = newData;
     newNode->next = NULL;
@@ -344,7 +356,7 @@ void DisplaySelectedResult()
 //显示某个用户的购买记录
 void DisplayUserBoughtData(LotteryAccountLinkedList *user)
 {
-    LTSoldDataLinkedList *userSoldData = user->data.soldDataHead;
+    TicketDataLinkedList *userSoldData = user->data.soldDataHead;
     if (userSoldData == NULL)
     {
         printf("没有购买过任何彩票\n");
@@ -389,7 +401,7 @@ void DisplayUserBoughtData(LotteryAccountLinkedList *user)
 //更新某个用户购买的彩票数、号码数
 void UpdateUserTicketsAndNumbers(LotteryAccountLinkedList *user)
 {
-    LTSoldDataLinkedList *userSoldData = user->data.soldDataHead;
+    TicketDataLinkedList *userSoldData = user->data.soldDataHead;
     //统计之前，重置数据
     lotteryCurrentLogin->data.tickets = 0;
     lotteryCurrentLogin->data.ticketNums = 0;
@@ -412,22 +424,22 @@ void UpdatePrizePool()
 {
     LotteryAccountLinkedList *user = userHead;
     //先确保有奖池存在
-    if (LTCurrent == NULL)
+    if (releaseDataCurrent == NULL)
     {
         printf("当前没有发行彩票");
         return;
     }
     //重置奖池数据
-    LTCurrent->data.totalSold = 0;
-    LTCurrent->data.totalPrize = 0;
+    releaseDataCurrent->data.totalSold = 0;
+    releaseDataCurrent->data.totalPrize = 0;
     //遍历用户购买数据
     while (user != NULL)
     {
         //先更新用户购买的数量
         UpdateUserTicketsAndNumbers(user);
         //更新到奖池
-        LTCurrent->data.totalSold += user->data.ticketNums;
-        LTCurrent->data.totalPrize += user->data.ticketNums * LTCurrent->data.price;
+        releaseDataCurrent->data.totalSold += user->data.ticketNums;
+        releaseDataCurrent->data.totalPrize += user->data.ticketNums * releaseDataCurrent->data.price;
         //继续遍历下一个用户
         user = user->next;
     }

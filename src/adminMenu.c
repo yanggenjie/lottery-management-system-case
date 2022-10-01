@@ -4,15 +4,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-// int issue;        //发行期号
-// int price;        //彩票单价
-// int status;       //开奖状态
-// int totalSold;    //本期售出总数
-// float totalPrize; //本期奖池总额
 
 // 发行的彩票信息
-TicktetLinkedList *LTHead = NULL;
-TicktetLinkedList *LTCurrent = NULL;
+ReleaseDataLinkedlist *releaseDataHead = NULL;
+ReleaseDataLinkedlist *releaseDataCurrent = NULL;
 // 彩民账号
 extern LotteryAccountLinkedList *userHead;
 extern LotteryAccountLinkedList *userCurrent;
@@ -81,7 +76,7 @@ void IssueLotteryTickey()
         if (preStatus)
         {
             //发行彩票
-            TicketData newInfo;
+            ReleaseData newInfo;
             newInfo.issue = issue; //输入期号
             newInfo.price = 2;     //默认单价
             newInfo.status = 0;    //默认未开奖
@@ -113,34 +108,34 @@ void IssueLotteryTickey()
 }
 
 //添加到彩票信息链表
-void AddToLottertTickeyLinkedList(TicketData newData)
+void AddToLottertTickeyLinkedList(ReleaseData newData)
 {
     //发行彩票
-    TicktetLinkedList *newLT = malloc(sizeof(TicktetLinkedList));
+    ReleaseDataLinkedlist *newLT = malloc(sizeof(ReleaseDataLinkedlist));
     newLT->data = newData;
     newLT->next = NULL;
-    if (LTHead == NULL)
+    if (releaseDataHead == NULL)
     {
-        LTHead = newLT;
-        LTCurrent = newLT;
+        releaseDataHead = newLT;
+        releaseDataCurrent = newLT;
         printf("************************\n");
-        printf("第%d期彩票发行成功!", LTCurrent->data.issue);
-        DisplayLotteryTicketInfo(LTCurrent);
+        printf("第%d期彩票发行成功!", releaseDataCurrent->data.issue);
+        DisplayLotteryTicketInfo(releaseDataCurrent);
         printf("************************\n");
         return;
     }
-    LTCurrent->next = newLT;
-    LTCurrent = newLT;
+    releaseDataCurrent->next = newLT;
+    releaseDataCurrent = newLT;
     printf("************************\n");
-    printf("第%d期彩票发行成功!\n", LTCurrent->data.issue);
-    DisplayLotteryTicketInfo(LTCurrent);
+    printf("第%d期彩票发行成功!\n", releaseDataCurrent->data.issue);
+    DisplayLotteryTicketInfo(releaseDataCurrent);
     printf("************************\n");
 }
 
 //判断期号唯一性
 int CheckIssueNumberUniqueness(unsigned int issue)
 {
-    TicktetLinkedList *temp = LTHead;
+    ReleaseDataLinkedlist *temp = releaseDataHead;
     while (temp != NULL)
     {
         if (issue == temp->data.issue)
@@ -158,14 +153,14 @@ int CheckIssueNumberUniqueness(unsigned int issue)
 int CheckPreIssueStatus()
 {
     //如果没有发行过任何彩票，则直接发行新期
-    if (LTHead == NULL || LTCurrent == NULL)
+    if (releaseDataHead == NULL || releaseDataCurrent == NULL)
     {
         return 1;
     }
     else
     {
         //如果已发行过1期以上，未发行新期之前，上一期就是当前期。
-        return LTCurrent->data.status;
+        return releaseDataCurrent->data.status;
     }
 }
 
@@ -467,7 +462,7 @@ void AccountManager()
 //查看发行历史
 void ReleaseView()
 {
-    TicktetLinkedList *temp = LTHead;
+    ReleaseDataLinkedlist *temp = releaseDataHead;
     if (temp == NULL)
     {
         printf("\n*********尚未发行过彩票**********\n");
@@ -481,7 +476,7 @@ void ReleaseView()
     }
 }
 //打印某期彩票信息
-void DisplayLotteryTicketInfo(TicktetLinkedList *LT)
+void DisplayLotteryTicketInfo(ReleaseDataLinkedlist *LT)
 {
     if (LT == NULL)
     {
@@ -522,7 +517,7 @@ void Save()
         switch (choose)
         {
         case 1:
-            WriteLotteryTicketInfoToBin();
+            WriteReleaseDataToBin();
             break;
         case 2:
             printf("尚未开通\n");
@@ -561,8 +556,8 @@ void ClearAllFiledata()
         perror("data/Lottery.dat");
         exit(EXIT_FAILURE);
     }
-    TicketData empty;
-    fwrite(&empty, sizeof(TicktetLinkedList), 0, LTFile);
+    ReleaseData empty;
+    fwrite(&empty, sizeof(ReleaseDataLinkedlist), 0, LTFile);
     fclose(LTFile);
     //清空彩民账号
 

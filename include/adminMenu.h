@@ -2,7 +2,7 @@
 #define ADMINMENU_H
 #include "account.h"
 #include <stdlib.h>
-//彩票基础信息
+//发行信息
 typedef struct
 {
 	unsigned issue;			   //发行期号
@@ -12,15 +12,15 @@ typedef struct
 	unsigned totalSold;		   //本期售出总数
 	float totalPrize;		   //本期奖池总额
 	unsigned winLevelCount[6]; //中奖数量统计，数组第0个位置代表一等奖，以此类推
-} TicketData;
+} ReleaseData;
 
-//彩票发行信息链表
-struct ticketLinkedlist
+//发行信息链表
+struct releaseDataLinkedlist
 {
-	TicketData data;
-	struct ticketLinkedlist *next;
+	ReleaseData data;
+	struct releaseDataLinkedlist *next;
 };
-typedef struct ticketLinkedlist TicktetLinkedList;
+typedef struct releaseDataLinkedlist ReleaseDataLinkedlist;
 
 // 管理员后台主菜单
 void AdminMenu();
@@ -30,7 +30,7 @@ void AdminMenu();
 
 // 发行彩票
 void IssueLotteryTickey();
-void AddToLottertTickeyLinkedList(TicketData newData);
+void AddToLottertTickeyLinkedList(ReleaseData newData);
 /*
  *   检查期号唯一性
  * @param issue 期号
@@ -80,7 +80,7 @@ void AccountManager();
 void ReleaseView();
 
 //打印某期彩票信息
-void DisplayLotteryTicketInfo(TicktetLinkedList *LT);
+void DisplayLotteryTicketInfo(ReleaseDataLinkedlist *LT);
 
 /********************************/
 /*********保存功能相关**********/

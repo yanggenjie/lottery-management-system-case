@@ -115,7 +115,7 @@ void SignUpUser()
     tempLTAccount.soldDataCurrent = NULL;
     AddToLotteryAccount(tempLTAccount);
     //记录到文件
-    // WriteLotteryAccountToBin();
+    WriteLotteryAccountToBin();
     //销毁临时空间
     free(temp);
     printf("\n************注册成功!************\n");
@@ -454,24 +454,31 @@ void DeleteAccount()
             return;
         }
     }
+
 }
 
 //删除操作确认
 int DeleteAccountOprationConfirm()
 {
     char uname[30];
+
+    printf("×××××××××××××××××××××××××××××\n");
     printf("此操作属于风险极高，请谨慎操作!\n");
+    printf("×××××××××××××××××××××××××××××\n");
+    printf("---------------------------\n");
     printf("您当前账户：\n");
-    ViewPersonalInfo();
+    ViewPersonalInfo();//显示账户信息
+    printf("---------------------------\n");
     printf("注销账户之后，您的账户金额将被清空，且不可恢复！\n");
     printf("您购买彩票的历史订单将被移除，且不可恢复！\n");
+    printf("---------------------------\n");
     printf("请输入当前账户名 %s 确认删除", lotteryCurrentLogin->data.account.name);
+    printf("---------------------------\n");
     scanf("%s", uname);
     if (strcmp(uname, lotteryCurrentLogin->data.account.name) == 0)
     {
-        int choose;
         printf("确认删除?\n1.确认\t2.取消");
-        scanf("%d", &choose);
+        int choose=RecStringConverToInt();
         switch (choose)
         {
         case 1:

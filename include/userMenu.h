@@ -1,20 +1,21 @@
 #ifndef USERMENU_H
 #define USERMENU_H
-//彩票售出号码记录
+//用户购买的彩票信息
 typedef struct
 {
-	unsigned issueNum;	   //发行期号
-	unsigned short status; //开奖状态
-	short winStatus;	   //本张彩票中奖状态
-	char numStr[5][22];	   //单张彩票最多5组号码
-} SoldCommData;
+	unsigned issueNum;	   //记录发行期号
+	unsigned short status; //同步开奖状态
+	short winStatus;	   //记录本张彩票中奖状态
+	char numStr[5][22];	   //记录本张彩票最多5组号码
+} TicketData;
 
+//用户购买的彩票链表
 struct LTSoldData
 {
-	SoldCommData data;
+	TicketData data;
 	struct LTSoldData *next;
 };
-typedef struct LTSoldData LTSoldDataLinkedList;
+typedef struct LTSoldData TicketDataLinkedList;
 
 /********************************/
 /***********彩民主界面*********/
@@ -40,7 +41,7 @@ void Bet();
 void MachineSelection(int n);
 
 //添加到售出数据到链表
-void AddSoldDataToLinkedlist(SoldCommData newData);
+void AddSoldDataToLinkedlist(TicketData newData);
 
 /*
 	生成随机数的字符串
@@ -55,13 +56,12 @@ void randomNum(char *nums);
 */
 int CheckBetNumberUniqueness(char nums[]);
 
-
 /*
-* 	更新奖池
-* 更新奖池，应该统计所有用户的购买数据
-* 奖池售出量 = 所有用户购买的号码数
-* 奖池奖金 = 所有用户购买的号码数 * 单价
-*/
+ * 	更新奖池
+ * 更新奖池，应该统计所有用户的购买数据
+ * 奖池售出量 = 所有用户购买的号码数
+ * 奖池奖金 = 所有用户购买的号码数 * 单价
+ */
 void UpdatePrizePool();
 
 /********************************/
