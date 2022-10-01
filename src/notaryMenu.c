@@ -26,11 +26,9 @@ void NotaryMenu()
         {
         case 1:
             ReleaseResults();
-
             break;
         case 2:
             ReleaseView();
-
             break;
         case 3:
             return;
@@ -63,8 +61,10 @@ void ReleaseResults()
         LTCurrent->data.status = 1;
         printf("开奖成功!\n");
         printf("本期中奖号码为:%s\n", LTCurrent->data.winResult);
-        //打印中奖用户
+        //打印中奖用户，并直接发放三等奖到六等奖的奖金
         ShowWinner();
+        //发完所有低等奖奖金之后，用奖池剩余的奖金分发到一等奖、二等奖用户
+        DistributeAdvanceBonus();
         return;
     }
 }
@@ -104,36 +104,42 @@ void ShowWinner()
                 //比较
                 int finalResult = CompareResult(winResult, userNum);
                 switch (finalResult)
-                {
+                { //一等奖二等奖需要等所有低等奖的奖金发放完之后，再计算
                 case 1:
                     printf("一等奖用户:%s\n", user->data.account.name);
-                    userSoldData->data.winStatus = 1;
-                    user->data.winer = 1;
+                    LTCurrent->data.winLevelCount[0]++; //统计一等奖数量，下同
+                    userSoldData->data.winStatus = 1;   //记录到购买的彩票上，下同
+                    user->data.AdvanceAward[0] = 1;     //标记为1等奖
                     break;
                 case 2:
                     printf("二等奖用户:%s\n", user->data.account.name);
+                    LTCurrent->data.winLevelCount[1]++;
                     userSoldData->data.winStatus = 2;
-                    user->data.winer = 2;
+                    user->data.AdvanceAward[1] = 2; //标记为2等奖
                     break;
                 case 3:
                     printf("三等奖用户:%s\n", user->data.account.name);
+                    LTCurrent->data.winLevelCount[2]++;
+                    user->data.balance += 3000; //三等奖到六等奖的用户直接打钱，下同
                     userSoldData->data.winStatus = 3;
-                    user->data.winer = 3;
                     break;
                 case 4:
                     printf("四等奖用户:%s\n", user->data.account.name);
+                    LTCurrent->data.winLevelCount[3]++;
+                    user->data.balance += 200;
                     userSoldData->data.winStatus = 4;
-                    user->data.winer = 4;
                     break;
                 case 5:
                     printf("五等奖用户:%s\n", user->data.account.name);
+                    LTCurrent->data.winLevelCount[4]++;
+                    user->data.balance += 10;
                     userSoldData->data.winStatus = 5;
-                    user->data.winer = 5;
                     break;
                 case 6:
                     printf("六等奖用户:%s\n", user->data.account.name);
+                    LTCurrent->data.winLevelCount[5]++;
+                    user->data.balance += 5;
                     userSoldData->data.winStatus = 6;
-                    user->data.winer = 6;
                     break;
                 default:
                     break;
@@ -158,12 +164,6 @@ void StrArrayToInt(char *sourceStr, int num[])
            &num[0], &num[1], &num[2],
            &num[3], &num[4], &num[5],
            &num[6]);
-    // // tempStr转为整形,保存到num
-    // for (i = 0; i < 6; i++)
-    // {
-    //     num[i] = atoi(tempStr[i]);
-    // }
-    // num[i] = atoi(tempStr[i]);
 }
 //中奖比较
 int CompareResult(int *winNum, int *userNum)
@@ -236,5 +236,53 @@ int CompareResult(int *winNum, int *userNum)
     {
         // printf("没中奖\n");
         return 0;
+    }
+}
+
+//分发高等奖奖金
+void DistributeAdvanceBonus()
+{
+    //输出所有中奖的数量
+    for (int i = 0; i < 6; i++)
+    {
+        printf("%d等奖用户数量%d\n", i + 1, LTCurrent->data.winLevelCount[i]);
+    }
+    // 把统计结果复制出来，简化标识符长度
+    int result[6];
+    for (int i = 0; i < 6; i++)
+    {
+        result[i] = LTCurrent->data.winLevelCount[i];
+    }
+
+    //先看统计结果有没有中高等奖的，没有就不用发奖金
+    if (result[0] == 0 && result == 0)
+    {
+        return;
+    }
+    //如果有，那就先计算奖金，待用
+    // 低等奖总奖金 = 三等奖数量*3000 + 四等奖数量*200 + 五等奖数量*10 + 六等奖数量*5
+    // 高等奖总奖金 = 奖池总额*0.49 - 低等奖总奖金
+    // 一等奖奖金 = 高等奖总奖金*0.75; 二等奖奖金 = 高等奖总奖金*0.25
+    int lowTotalPrize = result[2] * 3000 + result[3] * 200 + result[4] * 10 + result[5] * 5;
+    int advancePrizeBinus = LTCurrent->data.totalPrize * 0.49 - lowTotalPrize;
+    int firstPrizeBonus = advancePrizeBinus * 0.75;
+    int secondPrizeBonus = advancePrizeBinus * 0.25;
+
+    // 找出中一等奖的用户
+    LotteryAccountLinkedList *user = userHead;
+    while (user != NULL)
+    {
+        // 当前用户中一等奖，分发奖金
+        if (user->data.AdvanceAward[0] == 1)
+        {
+            user->data.balance += firstPrizeBonus;
+        }
+        // 当前用户中二等奖，分发奖金
+        if (user->data.AdvanceAward[1] == 2)
+        {
+            user->data.balance += secondPrizeBonus;
+        }
+        //当前用户没有中奖，换下一个用户
+        user = user->next;
     }
 }

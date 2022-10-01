@@ -6,14 +6,15 @@ void NotaryMenu();
 //开奖
 void ReleaseResults();
 
-//中奖
+//显示中奖用户
 void ShowWinner();
-//字符串转双色球
+//字符串转双色球整形数字
 void StrArrayToInt(char *str, int num[]);
-//彩票号码拆分
-void LotteryNumberSplitting(char *sourceStr, char *targetStr[7]);
-
 //中奖比较
 int CompareResult(int *winNum, int *userNum);
+
+//分发高等奖奖金
+void DistributeAdvanceBonus();
+
 
 #endif

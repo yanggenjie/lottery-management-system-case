@@ -5,12 +5,13 @@
 //彩票基础信息
 typedef struct
 {
-	unsigned issue;		   //发行期号
-	int price;			   //彩票单价
-	unsigned short status; //开奖状态,0未开奖，1已开奖
-	char winResult[22];	   //本期中奖号码
-	unsigned totalSold;	   //本期售出总数
-	float totalPrize;	   //本期奖池总额
+	unsigned issue;			   //发行期号
+	unsigned short price;	   //彩票单价
+	unsigned short status;	   //开奖状态,0未开奖，1已开奖
+	char winResult[22];		   //本期中奖号码,开奖时随机生成
+	unsigned totalSold;		   //本期售出总数
+	float totalPrize;		   //本期奖池总额
+	unsigned winLevelCount[6]; //中奖数量统计，数组第0个位置代表一等奖，以此类推
 } TicketData;
 
 //彩票发行信息链表
@@ -20,7 +21,6 @@ struct ticketLinkedlist
 	struct ticketLinkedlist *next;
 };
 typedef struct ticketLinkedlist TicktetLinkedList;
-
 
 // 管理员后台主菜单
 void AdminMenu();

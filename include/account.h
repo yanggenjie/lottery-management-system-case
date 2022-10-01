@@ -1,6 +1,6 @@
 #ifndef USER_H
 #define USER_H
-#include"userMenu.h"
+#include "userMenu.h"
 //账号通用信息
 struct accountComm
 {
@@ -28,13 +28,13 @@ typedef struct notary NotaryAccountLinkedlist;
 //彩民账号
 typedef struct
 {
-    AccountComm account;//用户名和密码
-    float balance; //余额
-    LTSoldDataLinkedList *soldDataHead;//彩票号码头节点关联账户
-    LTSoldDataLinkedList *soldDataCurrent;//彩票号码当前节点关联账户
-    unsigned tickets;//购买的彩票张数
-    unsigned ticketNums;//购买的彩票号码数
-    unsigned winer;
+    AccountComm account;                   //用户名和密码
+    float balance;                         //余额
+    unsigned tickets;                      //购买的彩票张数
+    unsigned ticketNums;                   //购买的彩票号码数
+    unsigned short AdvanceAward[2];        //仅用于标记一等奖、二等奖
+    LTSoldDataLinkedList *soldDataHead;    //彩票号码头节点关联账户
+    LTSoldDataLinkedList *soldDataCurrent; //彩票号码当前节点关联账户
 } LotteryData;
 
 struct lottery
@@ -130,15 +130,13 @@ int IsNotaryLogin(char name[], char pwd[]);
  */
 int IsUserLogin(char name[], char pwd[]);
 
-
 /*
-* 统计更新某个用户购买的彩票数、号码数
-* user 要统计的用户
-*/
+ * 统计更新某个用户购买的彩票数、号码数
+ * user 要统计的用户
+ */
 void UpdateUserTicketsAndNumbers(LotteryAccountLinkedList *user);
 
 //显示某个用户的购买记录
 void DisplayUserBoughtData(LotteryAccountLinkedList *user);
-
 
 #endif

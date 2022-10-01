@@ -3,11 +3,10 @@
 //彩票售出号码记录
 typedef struct
 {
-	unsigned issueNum;//发行期号
-	unsigned short status;//开奖状态
-	short winStatus;//本张彩票中奖状态
-	// unsigned short winLevel;//中奖等级
-	char numStr[5][22]; //单张彩票最多5组号码
+	unsigned issueNum;	   //发行期号
+	unsigned short status; //开奖状态
+	short winStatus;	   //本张彩票中奖状态
+	char numStr[5][22];	   //单张彩票最多5组号码
 } SoldCommData;
 
 struct LTSoldData
@@ -57,15 +56,11 @@ void randomNum(char *nums);
 int CheckBetNumberUniqueness(char nums[]);
 
 
-
-
-
-//统计所有用户购买的彩票数
-
-
 /*
 * 	更新奖池
-* 更新奖池，应该遍历所有用户购买的彩票数
+* 更新奖池，应该统计所有用户的购买数据
+* 奖池售出量 = 所有用户购买的号码数
+* 奖池奖金 = 所有用户购买的号码数 * 单价
 */
 void UpdatePrizePool();
 
@@ -81,6 +76,5 @@ int DeleteAccountOprationConfirm();
 
 //下注成功通知
 void DisplaySelectedResult();
-
 
 #endif

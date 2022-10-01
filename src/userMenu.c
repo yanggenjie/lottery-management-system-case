@@ -137,22 +137,31 @@ void Bet()
         printf("------------------------------------------\n");
         return;
     }
-    //如果存在，显示发行信息
+    //如果存在发行的彩票，显示发行信息
     printf("\n当前发行期数为%d,具体信息如下:", LTCurrent->data.issue);
     DisplayLotteryTicketInfo(LTCurrent);
 
-    //开始下注
+    //如果当前发行已经开奖，不能下注，只能下注未开奖的
+    if (LTCurrent->data.status)
+    {
+        printf("------------------------------------------\n");
+        printf("当前彩票期数已经开奖了，无法下注，请关注后续公告\n");
+        printf("------------------------------------------\n");
+        return;
+    }
+
+    //满足以上条件，开始下注
     printf("\t你要下几注？(输入数字即可，如下两注直接输入2)：");
     int number = RecStringConverToInt();
-    //提示单张彩票最多可下5注
     if (number > 5)
     {
         printf("----------------------------\n");
-        printf("注意:单张彩票最多能下5注，将为您购买多张彩票\n");
+        printf("注意:单张彩票最多能下5注，将为您购买多张彩票\n"); //提示单张彩票最多可下5注
         printf("----------------------------\n");
     }
+
     //如果余额不足，无法进行下注，先提示充值
-    //当前余额-单价*注数 < 0,说明余额不足
+    //当前余额 - 单价*注数 < 0,说明余额不足
     int condition1 = (lotteryCurrentLogin->data.balance - LTCurrent->data.price * number) < 0;
     if (condition1)
     {
@@ -160,6 +169,7 @@ void Bet()
         printf("您当前余额为:%.2f，余额不足，请先进行充值。\n", lotteryCurrentLogin->data.balance);
         return;
     }
+
     //条件满足，可以选择下注方式
     printf("请选择投注方式：\n\n1.自选号码投注\t2.机选号码投注\t3.取消投注\n\n");
     int choose = RecStringConverToInt();
@@ -356,6 +366,14 @@ void DisplayUserBoughtData(LotteryAccountLinkedList *user)
         {
             printf("开奖状态：未开奖\n");
         }
+        if (userSoldData->data.winStatus)
+        {
+            printf("中奖状态：%d等奖\n", userSoldData->data.winStatus);
+        }
+        else
+        {
+            printf("中奖状态：未中奖\n");
+        }
         printf("已购号码:\n");
         for (int i = 0; strcmp(userSoldData->data.numStr[i], empty) != 0; i++)
         {
@@ -389,14 +407,10 @@ void UpdateUserTicketsAndNumbers(LotteryAccountLinkedList *user)
     }
 }
 
+// 更新奖池信息
 void UpdatePrizePool()
 {
-    /*
-       奖池售出量=所有用户购买的号码数
-       奖池奖金=所有用户购买的号码数*单价
-   */
     LotteryAccountLinkedList *user = userHead;
-    //有发行彩票，有彩民注册，进行统计
     //先确保有奖池存在
     if (LTCurrent == NULL)
     {
@@ -406,7 +420,7 @@ void UpdatePrizePool()
     //重置奖池数据
     LTCurrent->data.totalSold = 0;
     LTCurrent->data.totalPrize = 0;
-    //先更新所有用户的购买量
+    //遍历用户购买数据
     while (user != NULL)
     {
         //先更新用户购买的数量

@@ -72,8 +72,8 @@ void IssueLotteryTickey()
 {
     printf("输入发行期号(期号格式如:20220901)：");
     unsigned issue = RecStringConverToInt();
-    int issueUniqueness = CheckIssueNumberUniqueness(issue);//期号唯一
-    int preStatus = CheckPreIssueStatus();//开奖状态
+    int issueUniqueness = CheckIssueNumberUniqueness(issue); //期号唯一
+    int preStatus = CheckPreIssueStatus();                   //开奖状态
     //判断期号唯一性
     if (issueUniqueness)
     {
@@ -89,6 +89,11 @@ void IssueLotteryTickey()
             strcpy(newInfo.winResult, empty); //默认没有中奖号码
             newInfo.totalSold = 0;            //初始化售出总数
             newInfo.totalPrize = 0;           //初始化奖池总额
+            //初始化中奖数量
+            for (int i = 0; i < 6; i++)
+            {
+                newInfo.winLevelCount[i] = 0;
+            }
             //添加到链表
             AddToLottertTickeyLinkedList(newInfo);
         }
@@ -539,7 +544,7 @@ int RecStringConverToInt()
     char str1[100];
     int choose;
     scanf("%s", str1);
-    //清空缓存流
+    //接受完毕，清空缓存流，防止用户误输入的数据对下一次输入的影响
     while (getchar() != 10)
     {
     };

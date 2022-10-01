@@ -104,13 +104,15 @@ void SignUpUser()
         free(temp);
         return;
     }
-    //合规，初始化余额，传值添加到链表
+    //合规，初始化基本信息，传值添加到链表
     tempLTAccount.account = *temp;
     tempLTAccount.balance = 0;
+    tempLTAccount.tickets = 0;
+    tempLTAccount.ticketNums = 0;
+    tempLTAccount.AdvanceAward[0] = 0;
+    tempLTAccount.AdvanceAward[1] = 0;
     tempLTAccount.soldDataHead = NULL;
     tempLTAccount.soldDataCurrent = NULL;
-    tempLTAccount.tickets=0;
-    tempLTAccount.ticketNums=0;
     AddToLotteryAccount(tempLTAccount);
     //记录到文件
     // WriteLotteryAccountToBin();
