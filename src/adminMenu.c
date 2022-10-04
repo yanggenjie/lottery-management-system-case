@@ -66,7 +66,14 @@ void IssueLotteryTickey()
     int preStatus = CheckPreIssueStatus(); // 开奖状态判断码
     if (preStatus)                         // 判断上期是否已开奖
     {
-        printf("输入发行期号(当前发行号%d):",releaseDataCurrent->data.issue);
+        if (releaseDataHead == NULL)
+        {
+            printf("输入发行期号(当前未发行过任何彩票):");
+        }
+        else
+        {
+            printf("输入发行期号(当前发行号%d):", releaseDataCurrent->data.issue);
+        }
         int issue = RecStringConverToInt();                      // 期号输入
         int issueUniqueness = CheckIssueNumberUniqueness(issue); // 期号唯一判断码
         // 判断期号唯一性

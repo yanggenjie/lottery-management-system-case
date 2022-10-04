@@ -37,7 +37,7 @@ void InitConfig()
 void WriteLotteryAccountToBin()
 {
     // 打开文件
-    char fileName[] = "data_LotteryAccount";
+    char fileName[] = "data/LotteryAccount";
     FILE *writeFile = fopen(fileName, "wb");
     // 保存账号数据
     LotteryAccountLinkedList *user = lotteryAccountHead;
@@ -53,7 +53,7 @@ void WriteLotteryAccountToBin()
 // 读取彩民账号
 void ReadLotteryAccountFromBin()
 {
-    char fileName[] = "data_LotteryAccount";
+    char fileName[] = "data/LotteryAccount";
     // 打开文件
     FILE *readFile = fopen(fileName, "rb");
     if (readFile == NULL)
@@ -78,7 +78,7 @@ void ReadLotteryAccountFromBin()
 // 保存发行信息
 void WriteReleaseDataToBin()
 {
-    char fileName[] = "data_release";
+    char fileName[] = "data/release";
     // 打开文件
     FILE *writeFile = fopen(fileName, "wb");
     if (writeFile == NULL)
@@ -100,7 +100,7 @@ void WriteReleaseDataToBin()
 // 读取发行信息
 void ReadReleaseDataFromBin()
 {
-    char fileName[] = "data_release";
+    char fileName[] = "data/release";
     // 打开文件
     FILE *readFile = fopen(fileName, "rb");
     if (readFile == NULL)
@@ -125,7 +125,7 @@ void ReadReleaseDataFromBin()
 // 保存彩票信息
 void WriteTicketDataToFile()
 {
-    char fileName[] = "data_ticket";
+    char fileName[] = "data/ticket";
     // 打开文件
     FILE *writeFile = fopen(fileName, "wb");
     if (writeFile == NULL)
@@ -148,7 +148,7 @@ void WriteTicketDataToFile()
 // 读取彩票信息
 void ReadTicketDataToFile()
 {
-    char fileName[] = "data_ticket";
+    char fileName[] = "data/ticket";
     // 打开文件
     FILE *readFile = fopen(fileName, "rb");
     if (readFile == NULL)

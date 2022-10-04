@@ -3,7 +3,7 @@
 <node TEXT="功能测试" LOCALIZED_STYLE_REF="AutomaticLayout.level.root" FOLDED="false" ID="ID_1090958577" CREATED="1409300609620" MODIFIED="1664685647011">
 <hook NAME="accessories/plugins/AutomaticLayout.properties" VALUE="ALL"/>
 <font BOLD="true"/>
-<hook NAME="MapStyle" background="#f9f9f8" zoom="1.001">
+<hook NAME="MapStyle" background="#f9f9f8" zoom="1.301">
     <properties show_icon_for_attributes="true" edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff" show_note_icons="true" associatedTemplateLocation="template:/light_nord_template.mm" fit_to_viewport="false"/>
 
 <map_styles>
@@ -135,18 +135,22 @@
 <node TEXT="1. 发行一期彩票。&#xa;2. 登录彩民1，充值22元，购买11个号码；购买完之后，彩民账户余额为0&#xa;3. 登录彩民2，充值100元，购买20个号码；购买完之后，彩民账户余额为60&#xa;4. 登录公证员，点击开奖，如有显示中奖用户，要显示中奖的用户。&#xa;5. 重新登录中奖的账号，查看余额是否更新。&#xa;&#xa;注意留意，购买完之后，登录公证员账号，查看奖池售出量应为31，奖池总额应为62" ID="ID_532331943" CREATED="1664879290470" MODIFIED="1664879843515" FORMAT="markdownPatternFormat" MAX_WIDTH="20 cm"/>
 </node>
 <node TEXT="bug" ID="ID_1048391722" CREATED="1664689400248" MODIFIED="1664689401405">
-<node TEXT="预期：如果已经开奖，则不可以继续开奖。&#xd;&#xa;&#xd;&#xa;目前bug:可以任意开奖。" ID="ID_1847016366" CREATED="1664689402614" MODIFIED="1664763711811" FORMAT="markdownPatternFormat">
-<icon BUILTIN="button_ok"/>
+<node TEXT="预期：如果已经开奖，则不可以继续开奖。&#xd;&#xa;&#xd;&#xa;目前bug:可以任意开奖。" ID="ID_1847016366" CREATED="1664689402614" MODIFIED="1664880365745" FORMAT="markdownPatternFormat">
 <node TEXT="已修复" ID="ID_606298373" CREATED="1664763712692" MODIFIED="1664763715299"/>
 </node>
+<node TEXT="开奖之后不能正确显示中奖用户，奖金发放正常，因未统计中奖用户" ID="ID_617124073" CREATED="1664903353200" MODIFIED="1664903398117">
+<node TEXT="已修复" ID="ID_783798952" CREATED="1664909755902" MODIFIED="1664909758644"/>
+</node>
+<node TEXT="奖金发放异常，多发" ID="ID_349659439" CREATED="1664909759678" MODIFIED="1664909775686"/>
 </node>
 </node>
 </node>
-<node TEXT="查看当前彩票信息" ID="ID_480436962" CREATED="1664764224308" MODIFIED="1664764233507">
+<node TEXT="查看当期发行信息" ID="ID_480436962" CREATED="1664764224308" MODIFIED="1664880136258">
 <icon BUILTIN="button_ok"/>
+<node TEXT="仅显示当期发行信息" ID="ID_720112773" CREATED="1664880110063" MODIFIED="1664880132367">
+<node TEXT="测试方法" ID="ID_242491032" CREATED="1664880118342" MODIFIED="1664880278220">
+<node TEXT="发行第一期彩票，开奖；&#xa;&#xa;发行第二期彩票&#xa;&#xa;点击测试是否仅显示第二期的信息" ID="ID_724285936" CREATED="1664880278563" MODIFIED="1664880345770" FORMAT="markdownPatternFormat"/>
 </node>
-<node TEXT="查看所有期彩票信息" ID="ID_1108707085" CREATED="1664689336640" MODIFIED="1664764233508">
-<icon BUILTIN="button_ok"/>
 <node TEXT="bug" ID="ID_1274290304" CREATED="1664695260526" MODIFIED="1664695270735">
 <node TEXT="有两期发行的时候，出现段错误" ID="ID_1591975456" CREATED="1664695272108" MODIFIED="1664695284383">
 <node TEXT="已修复" ID="ID_285695133" CREATED="1664764217733" MODIFIED="1664764219671"/>
@@ -154,24 +158,57 @@
 </node>
 </node>
 </node>
+<node TEXT="查看所有期发行信息" ID="ID_1108707085" CREATED="1664689336640" MODIFIED="1664880138401">
+<icon BUILTIN="button_ok"/>
+<node TEXT="能显示所有发行信息" ID="ID_248105901" CREATED="1664880371328" MODIFIED="1664880385662">
+<node TEXT="测试方法" ID="ID_1811736994" CREATED="1664880386288" MODIFIED="1664880392632">
+<arrowlink DESTINATION="ID_724285936" STARTINCLINATION="243.74999 pt;0 pt;" ENDINCLINATION="258.74999 pt;0 pt;"/>
+</node>
+</node>
+</node>
+</node>
 <node TEXT="彩民功能测试" POSITION="right" ID="ID_202984358" CREATED="1664764237403" MODIFIED="1664764241154">
 <node TEXT="查看个人信息" ID="ID_1969991726" CREATED="1664764302337" MODIFIED="1664877477144">
 <icon BUILTIN="button_ok"/>
+<node TEXT="能正确显示个人信息" ID="ID_1479486602" CREATED="1664880397172" MODIFIED="1664880408124">
+<node TEXT="" ID="ID_584628320" CREATED="1664880563270" MODIFIED="1664880563270"/>
+</node>
 </node>
 <node TEXT="修改密码" ID="ID_1065788299" CREATED="1664764355509" MODIFIED="1664877480312">
 <icon BUILTIN="button_ok"/>
+<node TEXT="能修改密码&#xa;- 检测旧密码是否正确，不正确提示重新输入旧密码&#xa;- 如正确，检验两次输入的新密码是否一致，不一致提示重新输入密码&#xa;- 如修改成功，下次登录前生效。" ID="ID_344784992" CREATED="1664880412872" MODIFIED="1664880552795" FORMAT="markdownPatternFormat">
+<node TEXT="测试方法" ID="ID_120475795" CREATED="1664880558850" MODIFIED="1664880561584">
+<node TEXT="注册u1,123;&#xd;&#xa;- 修改密码，原密码111，测试是否提示重新修改&#xd;&#xa;- 原密码123，新密码1234，新密码第二次1111，测试是否提示重新修改&#xd;&#xa;- 原密码123，新密码1234，新密码1234，测试是否提示修改成功&#xd;&#xa;- 退出登录，测试是能否用新密码登录。&#xd;&#xa;- 退出程序，重新启动，测试密码是否成功保存到文件" ID="ID_729140463" CREATED="1664880575717" MODIFIED="1664880963632" FORMAT="markdownPatternFormat" MAX_WIDTH="20 cm"/>
 </node>
-<node TEXT="账户充值" ID="ID_1374268560" CREATED="1664764359493" MODIFIED="1664764362337"/>
-<node TEXT="下注" ID="ID_931391262" CREATED="1664764363807" MODIFIED="1664764365188">
-<node TEXT="自选号码" ID="ID_1794256328" CREATED="1664764379115" MODIFIED="1664764381868"/>
+</node>
+</node>
+<node TEXT="账户充值" ID="ID_1374268560" CREATED="1664764359493" MODIFIED="1664764362337">
+<node TEXT="用户能给自己的账户充值" ID="ID_963121881" CREATED="1664880985997" MODIFIED="1664881135857">
+<node TEXT="测试方法" ID="ID_647783716" CREATED="1664881124311" MODIFIED="1664881176314">
+<node TEXT="查看当前账户余额，充值100；再次查看信息，检查是否充值成功" ID="ID_226320524" CREATED="1664881176443" MODIFIED="1664881210315"/>
+</node>
+</node>
+<node TEXT="购买彩票时，余额不足，要提示充值" ID="ID_363980205" CREATED="1664881137278" MODIFIED="1664881282625">
+<arrowlink DESTINATION="ID_1943856096"/>
+</node>
+</node>
+<node TEXT="下注" ID="ID_931391262" CREATED="1664764363807" MODIFIED="1664881170569">
+<node TEXT="自选号码" ID="ID_1794256328" CREATED="1664764379115" MODIFIED="1664881170569" HGAP_QUANTITY="22.25 pt" VSHIFT_QUANTITY="-17.25 pt"/>
 <node TEXT="机选号码" ID="ID_739458830" CREATED="1664764382002" MODIFIED="1664764385686">
 <node TEXT="bug" ID="ID_1825756328" CREATED="1664863277661" MODIFIED="1664863279609">
 <node TEXT="会生成乱码" ID="ID_362666432" CREATED="1664877341372" MODIFIED="1664877352059">
-<node TEXT="已修复" ID="ID_1004373262" CREATED="1664863279783" MODIFIED="1664877373513">
+<node TEXT="已修复" ID="ID_1004373262" CREATED="1664863279783" MODIFIED="1664881278496">
 <arrowlink DESTINATION="ID_197277470" STARTINCLINATION="-54 pt;34.5 pt;" ENDINCLINATION="33.75 pt;-11.25 pt;"/>
-<node TEXT="已修复，是打印的时候访问越界的下标，程序也有些问题，与打印出现乱码相同，都是数组下标越界&#xa;&#xa;```c&#xa;strcmp(ticketTemp-&gt;data.numStr[i], empty) != 0 &amp;&amp; i &lt; 5&#xa;```&#xa;numStr是5行22列的数组，忘记对i进行限制，本来只能访问到numStr[4]的，&#xa;&#xa;由于这里是循环条件的判断，没有加i&lt;5，i会一直增长下去，&#xa;&#xa;无限循环，所以，有循环的地方，要保证循环时，数组下标不会越界，否则就会出现各种意想不到的问题。" ID="ID_328086652" CREATED="1664870777610" MODIFIED="1664877361340" FORMAT="markdownPatternFormat" MAX_WIDTH="20 cm"/>
+<node TEXT="已修复，是打印的时候访问越界的下标，程序也有些问题，与打印出现乱码相同，都是数组下标越界&#xa;&#xa;```c&#xa;// 原循环结束的判断条件如下&#xa;strcmp(ticketTemp-&gt;data.numStr[i], empty) != 0&#xa;//修改后如下&#xa;strcmp(ticketTemp-&gt;data.numStr[i], empty) != 0 &amp;&amp; i &lt; 5&#xa;&#xa;```&#xa;numStr是5行22列的数组，忘记对i进行限制，本来只能访问到numStr[4]的，&#xa;&#xa;由于这里是循环条件的判断，没有加i&lt;5，i会一直增长下去，&#xa;&#xa;无限循环，所以，有循环的地方，要保证循环时，数组下标不会越界，否则就会出现各种意想不到的问题。" ID="ID_328086652" CREATED="1664870777610" MODIFIED="1664881084236" FORMAT="markdownPatternFormat" MAX_WIDTH="20 cm"/>
 </node>
 </node>
+</node>
+<node TEXT="测试方法" ID="ID_862201030" CREATED="1664881222209" MODIFIED="1664881267257">
+<node TEXT="- 账户余额为0，测试能否购买？是否提示余额不足？&#xa;- 给账户充值100。&#xa;- 购买11个号，查看记录。&#xa;- 切换公证员账号，查看奖池是否更新。&#xa;- 切换另外一个彩民，查看奖池的信息是否一致" ID="ID_1943856096" CREATED="1664881267526" MODIFIED="1664883482139" FORMAT="markdownPatternFormat"/>
+</node>
+<node TEXT="bug" ID="ID_1996172893" CREATED="1664883485204" MODIFIED="1664883486502">
+<node TEXT="下注之后，奖池未更新" ID="ID_1743023149" CREATED="1664883486666" MODIFIED="1664883497277"/>
+<node TEXT="下注之后，用户购买的号码数量统计有误，购买11个号码，显示15个" ID="ID_1977969516" CREATED="1664883723664" MODIFIED="1664883745178"/>
 </node>
 </node>
 </node>
