@@ -1,9 +1,9 @@
 <map version="freeplane 1.9.13">
 <!--To view this file, download free mind mapping software Freeplane from https://www.freeplane.org -->
-<node TEXT="彩票管理系统" LOCALIZED_STYLE_REF="AutomaticLayout.level.root" FOLDED="false" ID="ID_1090958577" CREATED="1409300609620" MODIFIED="1664610174635" VGAP_QUANTITY="2 pt">
+<node TEXT="彩票管理系统" LOCALIZED_STYLE_REF="AutomaticLayout.level.root" FOLDED="false" ID="ID_1090958577" CREATED="1409300609620" MODIFIED="1664877693764" VGAP_QUANTITY="2 pt">
 <hook NAME="accessories/plugins/AutomaticLayout.properties" VALUE="ALL"/>
 <font BOLD="true"/>
-<hook NAME="MapStyle" background="#f9f9f8" zoom="1.301">
+<hook NAME="MapStyle" background="#f9f9f8" zoom="1.001">
     <properties show_icon_for_attributes="true" edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff" show_notes_in_map="true" show_note_icons="true" associatedTemplateLocation="template:/light_nord_template.mm" fit_to_viewport="false"/>
 
 <map_styles>
@@ -36,7 +36,7 @@
 <stylenode LOCALIZED_TEXT="styles.user-defined" POSITION="right" STYLE="bubble">
 <stylenode LOCALIZED_TEXT="styles.important" ID="ID_915433779" BORDER_COLOR="#bf616a" FORMAT="markdownPatternFormat">
 <icon BUILTIN="yes"/>
-<arrowlink COLOR="#bf616a" TRANSPARENCY="255" DESTINATION="ID_915433779" STARTINCLINATION="66.75 pt;-21 pt;" ENDINCLINATION="66.75 pt;3.75 pt;"/>
+<arrowlink COLOR="#bf616a" TRANSPARENCY="255" DESTINATION="ID_915433779" STARTINCLINATION="66.75 pt;-20.25 pt;" ENDINCLINATION="66.75 pt;3.75 pt;"/>
 <font NAME="Ubuntu" SIZE="14"/>
 <edge COLOR="#bf616a"/>
 </stylenode>
@@ -86,7 +86,7 @@
 <node TEXT="```c&#xd;&#xa;//用户购买的彩票信息&#xd;&#xa;typedef struct&#xd;&#xa;{&#xd;&#xa;&#x9;unsigned issueNum;&#x9;   //记录发行期号&#xd;&#xa;&#x9;unsigned short status; //同步开奖状态&#xd;&#xa;&#x9;short winStatus;&#x9;   //记录本张彩票中奖状态&#xd;&#xa;&#x9;char numStr[5][22];&#x9;   //记录本张彩票最多5组号码&#xd;&#xa;} TicketData;&#xd;&#xa;&#xd;&#xa;//用户购买的彩票链表&#xd;&#xa;struct LTSoldData&#xd;&#xa;{&#xd;&#xa;&#x9;TicketData data;&#xd;&#xa;&#x9;struct LTSoldData *next;&#xd;&#xa;};&#xd;&#xa;typedef struct LTSoldData TicketDataLinkedList;&#xd;&#xa;&#xd;&#xa;```&#xd;&#xa;彩票信息如何与用户关联起来？&#xd;&#xa;&#xd;&#xa;在彩票中添加标记信息" LOCALIZED_STYLE_REF="defaultstyle.floating" POSITION="right" ID="ID_1458374880" CREATED="1664608364588" MODIFIED="1664701417903" HGAP_QUANTITY="833.24998 pt" VSHIFT_QUANTITY="-769.49998 pt" FORMAT="markdownPatternFormat" MAX_WIDTH="50 cm">
 <hook NAME="FreeNode"/>
 </node>
-<node TEXT="```c&#xd;&#xa;//发行信息&#xd;&#xa;typedef struct&#xd;&#xa;{&#xd;&#xa;&#x9;unsigned issue;&#x9;&#x9;&#x9;   //发行期号&#xd;&#xa;&#x9;unsigned short price;&#x9;   //彩票单价&#xd;&#xa;&#x9;unsigned short status;&#x9;   //开奖状态,0未开奖，1已开奖&#xd;&#xa;&#x9;char winResult[22];&#x9;&#x9;   //本期中奖号码,开奖时随机生成&#xd;&#xa;&#x9;unsigned totalSold;&#x9;&#x9;   //本期售出总数&#xd;&#xa;&#x9;float totalPrize;&#x9;&#x9;   //本期奖池总额&#xd;&#xa;&#x9;unsigned winLevelCount[6]; //中奖数量统计，数组第0个位置代表一等奖，以此类推&#xd;&#xa;} ReleaseData;&#xd;&#xa;&#xd;&#xa;//发行信息链表&#xd;&#xa;struct releaseDataLinkedlist&#xd;&#xa;{&#xd;&#xa;&#x9;ReleaseData data;&#xd;&#xa;&#x9;struct releaseDataLinkedlist *next;&#xd;&#xa;};&#xd;&#xa;typedef struct releaseDataLinkedlist ReleaseDataLinkedlist;&#xd;&#xa;&#xd;&#xa;```" LOCALIZED_STYLE_REF="defaultstyle.floating" POSITION="right" ID="ID_39805326" CREATED="1664610109482" MODIFIED="1664611165140" HGAP_QUANTITY="-832.49998 pt" VSHIFT_QUANTITY="-483.74999 pt" FORMAT="markdownPatternFormat" MAX_WIDTH="50 cm">
+<node TEXT="```c&#xd;&#xa;//发行信息&#xd;&#xa;typedef struct&#xd;&#xa;{&#xd;&#xa;&#x9;unsigned issue;&#x9;&#x9;&#x9;   //发行期号&#xd;&#xa;&#x9;unsigned short price;&#x9;   //彩票单价&#xd;&#xa;&#x9;unsigned short status;&#x9;   //开奖状态,0未开奖,1已开奖&#xd;&#xa;&#x9;char winResult[22];&#x9;&#x9;   //本期中奖号码,开奖时随机生成&#xd;&#xa;&#x9;unsigned totalSold;&#x9;&#x9;   //本期售出总数&#xd;&#xa;&#x9;float totalPrize;&#x9;&#x9;   //本期奖池总额&#xd;&#xa;&#x9;unsigned winLevelCount[6]; //中奖数量统计,数组第0个位置代表一等奖,以此类推&#xd;&#xa;} ReleaseData;&#xd;&#xa;&#xd;&#xa;//发行信息链表&#xd;&#xa;struct ReleaseDataLinkedlist&#xd;&#xa;{&#xd;&#xa;&#x9;ReleaseData data;&#xd;&#xa;&#x9;struct ReleaseDataLinkedlist *next;&#xd;&#xa;};&#xd;&#xa;typedef struct ReleaseDataLinkedlist ReleaseDataLinkedlist;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;```" LOCALIZED_STYLE_REF="defaultstyle.floating" POSITION="right" ID="ID_39805326" CREATED="1664610109482" MODIFIED="1664877726635" HGAP_QUANTITY="-754.49998 pt" VSHIFT_QUANTITY="-545.24999 pt" FORMAT="markdownPatternFormat" MAX_WIDTH="50 cm">
 <hook NAME="FreeNode"/>
 </node>
 <node TEXT="彩票分类" LOCALIZED_STYLE_REF="defaultstyle.floating" POSITION="right" ID="ID_1355533998" CREATED="1664007717429" MODIFIED="1664608044403" VGAP_QUANTITY="2 pt" HGAP_QUANTITY="1297.49996 pt" VSHIFT_QUANTITY="-404.99999 pt">
@@ -172,6 +172,9 @@
 </node>
 <node TEXT="排序" ID="ID_1539259030" CREATED="1664004492138" MODIFIED="1664292856810">
 <icon BUILTIN="button_ok"/>
+<node TEXT="显示所有彩民信息" ID="ID_1829124711" CREATED="1664878992913" MODIFIED="1664879004424">
+<icon BUILTIN="button_ok"/>
+</node>
 <node TEXT="根据彩民账号排序" ID="ID_903649892" CREATED="1664292572954" MODIFIED="1664292856811">
 <icon BUILTIN="button_ok"/>
 </node>
@@ -307,7 +310,7 @@
 <icon BUILTIN="button_ok"/>
 <node TEXT="红色球号码区由1-33共三十三个号码组成，蓝色球号码区由1-16共十六个号码组成。&#xa;&#xa;投注时选择6个红色球号码和1个蓝色球号码组成一注进行单式投注，&#xa;&#xa;每注金额人民币2元。" ID="ID_479080555" CREATED="1664608182404" MODIFIED="1664608257146" FORMAT="markdownPatternFormat" MAX_WIDTH="30 cm"/>
 <node TEXT="以单彩票为单位出售给用户，单张彩票可以容纳5注" ID="ID_1559063624" CREATED="1664608404641" MODIFIED="1664608472130">
-<arrowlink DESTINATION="ID_1458374880" STARTINCLINATION="361.49999 pt;0 pt;" ENDINCLINATION="-16.5 pt;175.49999 pt;"/>
+<arrowlink DESTINATION="ID_1458374880" STARTINCLINATION="361.49999 pt;0 pt;" ENDINCLINATION="-15.75 pt;175.49999 pt;"/>
 </node>
 </node>
 <node TEXT="下注完之后，更新奖池信息，奖池售出总数、总额&#xa;&#xa;应统计所有用户数据" ID="ID_981703883" CREATED="1664451874425" MODIFIED="1664608076125" BACKGROUND_COLOR="#00cccc" FORMAT="markdownPatternFormat">

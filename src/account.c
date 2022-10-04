@@ -72,8 +72,10 @@ void SignUpUser()
     LotteryData newAccount;
     newAccount.account = *temp;
     newAccount.balance = 0;
-    newAccount.tickets = 0;
-    newAccount.ticketNums = 0;
+    newAccount.allReleaseTickets = 0;
+    newAccount.allReleaseTicketNums = 0;
+    newAccount.currentReleaseTickets = 0;
+    newAccount.currentReleaseTicketNums = 0;
     newAccount.AdvanceAward = 0;
     //写入内存
     AddToLotteryAccountLinkedList(newAccount);
@@ -84,7 +86,6 @@ void SignUpUser()
     printf("\n************注册成功!************\n");
     return;
 }
-
 
 /********************************/
 /*********账号管理功能相关**********/
@@ -202,7 +203,7 @@ void DeleteAdminAccount()
     }
     //根据用户名查找账号所在的节点
     AdminAccountLinkedList *del = FindAdminAccountNodeByUserName(name);
-    // 没有找到用户
+    //没有找到用户
     if (del == NULL)
     {
         printf("不存在该账户\n");
@@ -236,7 +237,7 @@ void DeleteNotaryAccount()
     }
     //根据用户名查找账号所在的节点
     NotaryAccountLinkedlist *del = FindNotaryAccountNodeByUserName(name);
-    // 没有找到用户
+    //没有找到用户
     if (del == NULL)
     {
         printf("不存在该账户\n");
@@ -606,8 +607,6 @@ int IsUserLogin(char name[], char pwd[])
         {
             //标记当前登录账号
             lotteryCurrentLogin = user;
-            //读取当前账号彩票购买历史
-            ReadTicketDataToFile();
             return 1;
         }
         user = user->next;
