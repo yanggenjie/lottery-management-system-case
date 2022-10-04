@@ -20,9 +20,9 @@ void WriteReleaseDataToBin();
 void ReadReleaseDataFromBin();
 
 
-//保存用户购买历史
-void WriteBoughtHistoryToFile();
-//读取用户购买历史
-void ReadBoughtHistoryFromFile();
+//保存彩票信息
+void WriteTicketDataToFile();
+//读取彩票信息
+void ReadTicketDataToFile();
 
 #endif

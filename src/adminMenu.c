@@ -9,8 +9,8 @@
 ReleaseDataLinkedlist *releaseDataHead = NULL;
 ReleaseDataLinkedlist *releaseDataCurrent = NULL;
 // 彩民账号
-extern LotteryAccountLinkedList *userHead;
-extern LotteryAccountLinkedList *userCurrent;
+extern LotteryAccountLinkedList *lotteryAccountHead;
+extern LotteryAccountLinkedList *lotteryAccountCurrent;
 
 // 管理员后台主菜单
 void AdminMenu()
@@ -95,14 +95,14 @@ void IssueLotteryTickey()
         else
         {
             printf("************************\n");
-            printf("上期未开奖，无法发布下一期!\n");
+            printf("上期未开奖,无法发布下一期!\n");
             printf("************************\n");
         }
     }
     else
     {
         printf("************************\n");
-        printf("期号已发布，请重新检查期号！\n");
+        printf("期号已发布,请重新检查期号！\n");
         printf("************************\n");
     }
 }
@@ -131,26 +131,26 @@ int CheckIssueNumberUniqueness(unsigned int issue)
     {
         if (issue == temp->data.issue)
         {
-            //在历史中找到相同的期号，说明不唯一，返回0
+            //在历史中找到相同的期号,说明不唯一,返回0
             return 0;
         }
         temp = temp->next;
     }
-    //没有找到，说明输入的期号是唯一的，可以使用
+    //没有找到,说明输入的期号是唯一的,可以使用
     return 1;
 }
 
 //检查上期开奖状态
 int CheckPreIssueStatus()
 {
-    //如果没有发行过任何彩票，则直接发行新期
+    //如果没有发行过任何彩票,则直接发行新期
     if (releaseDataHead == NULL || releaseDataCurrent == NULL)
     {
         return 1;
     }
     else
     {
-        //如果已发行过1期以上，未发行新期之前，上一期就是当前期。
+        //如果已发行过1期以上,未发行新期之前,上一期就是当前期。
         return releaseDataCurrent->data.status;
     }
 }
@@ -196,7 +196,7 @@ void QueryByUserName()
     printf("输入要查询的用户名：");
     scanf("%s", uname);
     //遍历查询User表
-    LotteryAccountLinkedList *temp = userHead;
+    LotteryAccountLinkedList *temp = lotteryAccountHead;
     if (temp == NULL)
     {
         printf("\n尚不存在任何用户!\n");
@@ -221,7 +221,7 @@ void QueryByUserName()
 void QueryByBalanceRange()
 {
     float min, max;
-    LotteryAccountLinkedList *temp = userHead;
+    LotteryAccountLinkedList *temp = lotteryAccountHead;
     int check = 0; //用于检测找到的结果数
     printf("请指定余额区间,结果包含区间边界(格式如:10-20)：");
     scanf("%f-%f", &min, &max);
@@ -241,7 +241,7 @@ void QueryByBalanceRange()
         }
         temp = temp->next;
     }
-    //如果都没找到，提示结果
+    //如果都没找到,提示结果
     if (check == 0)
     {
         printf("没有找到符合条件的结果!\n");
@@ -283,20 +283,20 @@ void SortDisplayLotteryMenu()
 void SortDisplayLotteryByAccount()
 {
     //没有任何用户
-    if (userHead == NULL)
+    if (lotteryAccountHead == NULL)
     {
         printf("\n尚不存在任何用户\n");
         return;
     }
-    //只有一个用户，直接打印输出，无需排序
-    if (userHead->next == NULL)
+    //只有一个用户,直接打印输出,无需排序
+    if (lotteryAccountHead->next == NULL)
     {
-        DisplaySingleLotteryInfo(userHead);
+        DisplaySingleLotteryInfo(lotteryAccountHead);
         return;
     }
 
-    //有2个以上的用户，进行选择排序，升序排序
-    for (LotteryAccountLinkedList *i = userHead; i != NULL; i = i->next)
+    //有2个以上的用户,进行选择排序,升序排序
+    for (LotteryAccountLinkedList *i = lotteryAccountHead; i != NULL; i = i->next)
     {
         //标记最小值
         LotteryAccountLinkedList *min = i;
@@ -308,21 +308,21 @@ void SortDisplayLotteryByAccount()
                 min = j;
             }
         }
-        //得到更小值之后，节点交换
-        //如果是头节点，要重新标记头节点，其他可直接交换
+        //得到更小值之后,节点交换
+        //如果是头节点,要重新标记头节点,其他可直接交换
         LotteryAccountLinkedList *prev = FindLotteryAccountPreNode(min);
         LotteryAccountLinkedList *next = min->next;
-        if (prev == userHead)
+        if (prev == lotteryAccountHead)
         {
-            userHead->next = min->next;
-            min->next = userHead;
-            userHead = min;
+            lotteryAccountHead->next = min->next;
+            min->next = lotteryAccountHead;
+            lotteryAccountHead = min;
             break;
         }
-        min->next = userHead->next;
-        prev->next = userHead;
-        userHead->next = next;
-        userHead = min;
+        min->next = lotteryAccountHead->next;
+        prev->next = lotteryAccountHead;
+        lotteryAccountHead->next = next;
+        lotteryAccountHead = min;
     }
     //打印输出信息
     DisplayAllLottery();
@@ -330,20 +330,20 @@ void SortDisplayLotteryByAccount()
 void SortDisplayLotteryByBalance()
 {
     //没有任何用户
-    if (userHead == NULL)
+    if (lotteryAccountHead == NULL)
     {
         printf("\n尚不存在任何用户\n");
         return;
     }
-    //只有一个用户，直接打印输出，无需排序
-    if (userHead->next == NULL)
+    //只有一个用户,直接打印输出,无需排序
+    if (lotteryAccountHead->next == NULL)
     {
-        DisplaySingleLotteryInfo(userHead);
+        DisplaySingleLotteryInfo(lotteryAccountHead);
         return;
     }
 
-    //有2个以上的用户，进行选择排序，升序排序
-    for (LotteryAccountLinkedList *i = userHead; i != NULL; i = i->next)
+    //有2个以上的用户,进行选择排序,升序排序
+    for (LotteryAccountLinkedList *i = lotteryAccountHead; i != NULL; i = i->next)
     {
         //标记最小值
         LotteryAccountLinkedList *min = i;
@@ -355,21 +355,21 @@ void SortDisplayLotteryByBalance()
                 min = j;
             }
         }
-        //得到更小值之后，节点交换
-        //如果是头节点，要重新标记头节点，其他可直接交换
+        //得到更小值之后,节点交换
+        //如果是头节点,要重新标记头节点,其他可直接交换
         LotteryAccountLinkedList *prev = FindLotteryAccountPreNode(min);
         LotteryAccountLinkedList *next = min->next;
-        if (prev == userHead)
+        if (prev == lotteryAccountHead)
         {
-            userHead->next = min->next;
-            min->next = userHead;
-            userHead = min;
+            lotteryAccountHead->next = min->next;
+            min->next = lotteryAccountHead;
+            lotteryAccountHead = min;
             break;
         }
-        min->next = userHead->next;
-        prev->next = userHead;
-        userHead->next = next;
-        userHead = min;
+        min->next = lotteryAccountHead->next;
+        prev->next = lotteryAccountHead;
+        lotteryAccountHead->next = next;
+        lotteryAccountHead = min;
     }
     //打印输出信息
     DisplayAllLottery();
@@ -378,7 +378,7 @@ void SortDisplayLotteryByBalance()
 //显示所有彩民信息
 void DisplayAllLottery()
 {
-    LotteryAccountLinkedList *temp = userHead;
+    LotteryAccountLinkedList *temp = lotteryAccountHead;
     if (temp == NULL)
     {
         printf("尚不存在任何用户\n");
@@ -394,14 +394,15 @@ void DisplaySingleLotteryInfo(LotteryAccountLinkedList *userNode)
 {
     if (userNode == NULL)
     {
-        printf("用户信息不存在，\n");
+        printf("用户信息不存在,\n");
         return;
     }
     printf("------------------------------------------\n");
-    printf("账号：%s\n", userNode->data.account.name);
-    printf("账户余额：%.2f\n", userNode->data.balance);
-    printf("已购：%d张彩票\n", userNode->data.tickets);
-    printf("累计下注：%d个号码\n", userNode->data.ticketNums);
+    printf("用户名：%s\n", userNode->data.account.name);
+    printf("余额：%.2f\n", userNode->data.balance);
+    // printf("当期已购：%d张彩票\n", userNode->data.tickets);
+    printf("历史已购：%d张彩票\n", userNode->data.tickets);
+    printf("历史累计下注：%d个号码\n", userNode->data.ticketNums);
     printf("------------------------------------------\n");
 }
 
@@ -421,6 +422,7 @@ void ReleaseView()
         releaseData = releaseData->next;
     }
 }
+
 //打印某期彩票信息
 void DisplaySingleReleaseData(ReleaseDataLinkedlist *LT)
 {
@@ -432,17 +434,18 @@ void DisplaySingleReleaseData(ReleaseDataLinkedlist *LT)
     printf("\n----------------------------\n");
     printf("\t第%d期\n", LT->data.issue);
     printf("\t单价:%d元\n", LT->data.price);
-    if (LT->data.status)
-    {
-        printf("\t开奖状态：已开奖\n");
-    }
-    else
-    {
-        printf("\t开奖状态：未开奖\n");
-    }
+    printf("\t开奖状态：");
+    LT->data.status ? printf("已开奖\n") : printf("未开奖\n");
     printf("\t本期中奖号码:%s\n", LT->data.winResult);
     printf("\t本期售出总数:%d\n", LT->data.totalSold);
     printf("\t本期奖池总额:%.2f\n", LT->data.totalPrize);
+    for (int i = 0; i < 6; i++)
+    {
+        if (LT->data.winLevelCount[i] > 0)
+        {
+            printf("%d等级用户%d个", i + 1, LT->data.winLevelCount[i]);
+        }
+    }
     printf("----------------------------\n");
 }
 
@@ -465,7 +468,7 @@ void SaveMenu()
         case 1:
             WriteReleaseDataToBin();
             printf("\n------------------------------\n");
-            printf("发行信息保存成功，感谢使用彩票管理系统\n");
+            printf("发行信息保存成功,感谢使用彩票管理系统\n");
             printf("\n------------------------------\n");
             break;
         case 2:
@@ -488,7 +491,7 @@ int RecStringConverToInt()
     char str1[100];
     int choose;
     scanf("%s", str1);
-    //接受完毕，清空缓存流，防止用户误输入的数据对下一次输入的影响
+    //接受完毕,清空缓存流,防止用户误输入的数据对下一次输入的影响
     while (getchar() != 10)
     {
     };

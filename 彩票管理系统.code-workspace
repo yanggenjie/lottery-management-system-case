@@ -16,7 +16,8 @@
 			"account.h": "c",
 			"string.h": "c",
 			"cstdlib": "c",
-			"usermenu.h": "c"
+			"usermenu.h": "c",
+			"type_traits": "c"
 		}
 	}
 }

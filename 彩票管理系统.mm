@@ -3,7 +3,7 @@
 <node TEXT="彩票管理系统" LOCALIZED_STYLE_REF="AutomaticLayout.level.root" FOLDED="false" ID="ID_1090958577" CREATED="1409300609620" MODIFIED="1664610174635" VGAP_QUANTITY="2 pt">
 <hook NAME="accessories/plugins/AutomaticLayout.properties" VALUE="ALL"/>
 <font BOLD="true"/>
-<hook NAME="MapStyle" background="#f9f9f8" zoom="1.001">
+<hook NAME="MapStyle" background="#f9f9f8" zoom="1.301">
     <properties show_icon_for_attributes="true" edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff" show_notes_in_map="true" show_note_icons="true" associatedTemplateLocation="template:/light_nord_template.mm" fit_to_viewport="false"/>
 
 <map_styles>
@@ -83,7 +83,7 @@
 <hook NAME="FreeNode"/>
 <node TEXT="```c&#xd;&#xa;//彩民账号&#xd;&#xa;typedef struct&#xd;&#xa;{&#xd;&#xa;    AccountComm account;                   //用户名和密码&#xd;&#xa;    float balance;                         //余额&#xd;&#xa;    unsigned tickets;                      //购买的彩票张数&#xd;&#xa;    unsigned ticketNums;                   //购买的彩票号码数&#xd;&#xa;    unsigned short AdvanceAward[2];        //仅用于标记一等奖、二等奖&#xd;&#xa;    LTSoldDataLinkedList *soldDataHead;    //彩票号码头节点关联账户&#xd;&#xa;    LTSoldDataLinkedList *soldDataCurrent; //彩票号码当前节点关联账户&#xd;&#xa;} LotteryData;&#xd;&#xa;&#xd;&#xa;struct lottery&#xd;&#xa;{&#xd;&#xa;    LotteryData data;&#xd;&#xa;    struct lottery *next;&#xd;&#xa;};&#xd;&#xa;typedef struct lottery LotteryAccountLinkedList;&#xd;&#xa;&#xd;&#xa;```" LOCALIZED_STYLE_REF="default" ID="ID_530153858" CREATED="1664006634822" MODIFIED="1664607981899" HGAP_QUANTITY="18.5 pt" VSHIFT_QUANTITY="-6 pt" FORMAT="markdownPatternFormat" MAX_WIDTH="30 cm"/>
 </node>
-<node TEXT="```c&#xd;&#xa;//用户购买的彩票信息&#xd;&#xa;typedef struct&#xd;&#xa;{&#xd;&#xa;&#x9;unsigned issueNum;&#x9;   //记录发行期号&#xd;&#xa;&#x9;unsigned short status; //同步开奖状态&#xd;&#xa;&#x9;short winStatus;&#x9;   //记录本张彩票中奖状态&#xd;&#xa;&#x9;char numStr[5][22];&#x9;   //记录本张彩票最多5组号码&#xd;&#xa;} TicketData;&#xd;&#xa;&#xd;&#xa;//用户购买的彩票链表&#xd;&#xa;struct LTSoldData&#xd;&#xa;{&#xd;&#xa;&#x9;TicketData data;&#xd;&#xa;&#x9;struct LTSoldData *next;&#xd;&#xa;};&#xd;&#xa;typedef struct LTSoldData TicketDataLinkedList;&#xd;&#xa;&#xd;&#xa;```" LOCALIZED_STYLE_REF="defaultstyle.floating" POSITION="right" ID="ID_1458374880" CREATED="1664608364588" MODIFIED="1664610167909" HGAP_QUANTITY="833.24998 pt" VSHIFT_QUANTITY="-769.49998 pt" FORMAT="markdownPatternFormat" MAX_WIDTH="50 cm">
+<node TEXT="```c&#xd;&#xa;//用户购买的彩票信息&#xd;&#xa;typedef struct&#xd;&#xa;{&#xd;&#xa;&#x9;unsigned issueNum;&#x9;   //记录发行期号&#xd;&#xa;&#x9;unsigned short status; //同步开奖状态&#xd;&#xa;&#x9;short winStatus;&#x9;   //记录本张彩票中奖状态&#xd;&#xa;&#x9;char numStr[5][22];&#x9;   //记录本张彩票最多5组号码&#xd;&#xa;} TicketData;&#xd;&#xa;&#xd;&#xa;//用户购买的彩票链表&#xd;&#xa;struct LTSoldData&#xd;&#xa;{&#xd;&#xa;&#x9;TicketData data;&#xd;&#xa;&#x9;struct LTSoldData *next;&#xd;&#xa;};&#xd;&#xa;typedef struct LTSoldData TicketDataLinkedList;&#xd;&#xa;&#xd;&#xa;```&#xd;&#xa;彩票信息如何与用户关联起来？&#xd;&#xa;&#xd;&#xa;在彩票中添加标记信息" LOCALIZED_STYLE_REF="defaultstyle.floating" POSITION="right" ID="ID_1458374880" CREATED="1664608364588" MODIFIED="1664701417903" HGAP_QUANTITY="833.24998 pt" VSHIFT_QUANTITY="-769.49998 pt" FORMAT="markdownPatternFormat" MAX_WIDTH="50 cm">
 <hook NAME="FreeNode"/>
 </node>
 <node TEXT="```c&#xd;&#xa;//发行信息&#xd;&#xa;typedef struct&#xd;&#xa;{&#xd;&#xa;&#x9;unsigned issue;&#x9;&#x9;&#x9;   //发行期号&#xd;&#xa;&#x9;unsigned short price;&#x9;   //彩票单价&#xd;&#xa;&#x9;unsigned short status;&#x9;   //开奖状态,0未开奖，1已开奖&#xd;&#xa;&#x9;char winResult[22];&#x9;&#x9;   //本期中奖号码,开奖时随机生成&#xd;&#xa;&#x9;unsigned totalSold;&#x9;&#x9;   //本期售出总数&#xd;&#xa;&#x9;float totalPrize;&#x9;&#x9;   //本期奖池总额&#xd;&#xa;&#x9;unsigned winLevelCount[6]; //中奖数量统计，数组第0个位置代表一等奖，以此类推&#xd;&#xa;} ReleaseData;&#xd;&#xa;&#xd;&#xa;//发行信息链表&#xd;&#xa;struct releaseDataLinkedlist&#xd;&#xa;{&#xd;&#xa;&#x9;ReleaseData data;&#xd;&#xa;&#x9;struct releaseDataLinkedlist *next;&#xd;&#xa;};&#xd;&#xa;typedef struct releaseDataLinkedlist ReleaseDataLinkedlist;&#xd;&#xa;&#xd;&#xa;```" LOCALIZED_STYLE_REF="defaultstyle.floating" POSITION="right" ID="ID_39805326" CREATED="1664610109482" MODIFIED="1664611165140" HGAP_QUANTITY="-832.49998 pt" VSHIFT_QUANTITY="-483.74999 pt" FORMAT="markdownPatternFormat" MAX_WIDTH="50 cm">
@@ -145,6 +145,7 @@
 </node>
 <node TEXT="程序初始化" POSITION="right" ID="ID_1149665618" CREATED="1664611033016" MODIFIED="1664611037711">
 <node TEXT="创建默认管理员admin,123" ID="ID_651198972" CREATED="1664611038140" MODIFIED="1664611051432"/>
+<node TEXT="创建默认公证员账号notary,123" ID="ID_969383998" CREATED="1664695180132" MODIFIED="1664695193392"/>
 <node TEXT="读取彩民账号" ID="ID_517634261" CREATED="1664611052051" MODIFIED="1664611060619"/>
 <node TEXT="读取发行信息" ID="ID_1307710732" CREATED="1664611060763" MODIFIED="1664611063768"/>
 </node>
@@ -210,14 +211,14 @@
 </node>
 <node TEXT="公证员界面" ID="ID_1976271761" CREATED="1664004587642" MODIFIED="1664293070171">
 <node TEXT="规则" ID="ID_734303998" CREATED="1664613169840" MODIFIED="1664613174969">
-<node TEXT="设奖规则" FOLDED="true" ID="ID_1286372445" CREATED="1664537494968" MODIFIED="1664537505415">
+<node TEXT="设奖规则" ID="ID_1286372445" CREATED="1664537494968" MODIFIED="1664537505415">
 <node TEXT="当期奖金总额=当期销售额x51%&#xa;&#xa;一等奖=高等奖x5%，最高500万封顶&#xa;&#xa;二等奖=高等奖x25%，封顶500万&#xa;&#xa;高等奖=当期奖金-低等奖&#xa;&#xa;低等奖=三等奖到六等奖之和，&#xa;&#xa;三等奖单注固定3000&#xa;&#xa;四等奖单注固定200&#xa;&#xa;五等奖单注固定10元&#xa;&#xa;六等奖单注固定5元" ID="ID_1357429626" CREATED="1664537864708" MODIFIED="1664613040029" FORMAT="markdownPatternFormat" MAX_WIDTH="20 cm"/>
 </node>
-<node TEXT="中奖" FOLDED="true" ID="ID_168093958" CREATED="1664538064961" MODIFIED="1664538067009">
+<node TEXT="中奖" ID="ID_168093958" CREATED="1664538064961" MODIFIED="1664538067009">
 <node TEXT="一等奖：投注号码与当期开奖号码全部相同（顺序不限，下同），即中奖；&#xd;&#xa;&#xd;&#xa;二等奖：投注号码与当期开奖号码中的6个红色球号码相同，即中奖；&#xd;&#xa;&#xd;&#xa;三等奖：投注号码与当期开奖号码中的任意5个红色球号码和1个蓝色球号码相同，即中奖；&#xd;&#xa;&#xd;&#xa;四等奖：投注号码与当期开奖号码中的任意5个红色球号码相同，或与任意4个红色球号码和1个蓝色球号码相同，即中奖；&#xd;&#xa;&#xd;&#xa;五等奖：投注号码与当期开奖号码中的任意4个红色球号码相同，或与任意3个红色球号码和1个蓝色球号码相同，即中奖；&#xd;&#xa;&#xd;&#xa;六等奖：投注号码与当期开奖号码中的1个蓝色球号码相同，即中奖。" ID="ID_1901643594" CREATED="1664538070014" MODIFIED="1664538090278" FORMAT="markdownPatternFormat" MAX_WIDTH="20 cm"/>
 </node>
 </node>
-<node TEXT="开奖" ID="ID_266871431" CREATED="1664004593396" MODIFIED="1664204797352">
+<node TEXT="开奖" FOLDED="true" ID="ID_266871431" CREATED="1664004593396" MODIFIED="1664204797352">
 <icon BUILTIN="button_ok"/>
 <node TEXT="开奖之后，自动关联中奖的用户，在用户购买的彩票上标记中奖状态，以及中几等奖" ID="ID_207169070" CREATED="1664537219818" MODIFIED="1664613149112">
 <icon BUILTIN="button_ok"/>
@@ -248,13 +249,13 @@
 </node>
 </node>
 <node TEXT="彩民界面" ID="ID_197218013" CREATED="1664004378245" MODIFIED="1664612948546" VGAP_QUANTITY="2 pt">
-<node TEXT="查看个人信息" ID="ID_557055966" CREATED="1664004500430" MODIFIED="1664327746498">
+<node TEXT="查看个人信息" FOLDED="true" ID="ID_557055966" CREATED="1664004500430" MODIFIED="1664327746498">
 <icon BUILTIN="button_ok"/>
 <node TEXT="彩民能查看个人信息、账户余额" ID="ID_1891521820" CREATED="1664607652534" MODIFIED="1664607670354">
 <icon BUILTIN="button_ok"/>
 </node>
 </node>
-<node TEXT="修改密码" ID="ID_127038925" CREATED="1664329633593" MODIFIED="1664329645959">
+<node TEXT="修改密码" FOLDED="true" ID="ID_127038925" CREATED="1664329633593" MODIFIED="1664329645959">
 <icon BUILTIN="button_ok"/>
 <node TEXT="检验旧密码是否正确，不正确提示重新输入旧密码" ID="ID_1899709402" CREATED="1664004524202" MODIFIED="1664329583684">
 <icon BUILTIN="button_ok"/>
@@ -278,9 +279,9 @@
 <icon BUILTIN="button_ok"/>
 </node>
 </node>
-<node TEXT="下注" FOLDED="true" ID="ID_522913412" CREATED="1664004532908" MODIFIED="1664381785311">
+<node TEXT="下注" ID="ID_522913412" CREATED="1664004532908" MODIFIED="1664381785311">
 <icon BUILTIN="button_ok"/>
-<node TEXT="基本要求" ID="ID_1116702636" CREATED="1664607531239" MODIFIED="1664607534943">
+<node TEXT="基本要求" FOLDED="true" ID="ID_1116702636" CREATED="1664607531239" MODIFIED="1664607534943">
 <node TEXT="提示彩民相关彩票信息，例如售价、期数等，所有彩民登录后看到相同的彩票信息" ID="ID_197612224" CREATED="1664381814209" MODIFIED="1664381910772">
 <icon BUILTIN="button_ok"/>
 </node>
@@ -293,7 +294,7 @@
 <icon BUILTIN="button_ok"/>
 </node>
 </node>
-<node TEXT="下注" ID="ID_511224934" CREATED="1664337636159" MODIFIED="1664607595377">
+<node TEXT="下注，机选号码" FOLDED="true" ID="ID_511224934" CREATED="1664337636159" MODIFIED="1664696620661">
 <icon BUILTIN="button_ok"/>
 <node TEXT="1. 没有发行彩票无法使用下注功能&#xa;2. 如果已经开奖，则无法继续购买&#xa;3. 余额不足无法购买" ID="ID_1891613752" CREATED="1664565334765" MODIFIED="1664608149236" FORMAT="markdownPatternFormat">
 <icon BUILTIN="button_ok"/>
@@ -351,7 +352,7 @@
 </node>
 </node>
 </node>
-<node TEXT="注销" ID="ID_697807746" CREATED="1664004542769" MODIFIED="1664329651222">
+<node TEXT="注销" FOLDED="true" ID="ID_697807746" CREATED="1664004542769" MODIFIED="1664329651222">
 <icon BUILTIN="button_ok"/>
 <node TEXT="注销前，提示风险，再次确认！" ID="ID_1755562616" CREATED="1664329652274" MODIFIED="1664364522016">
 <icon BUILTIN="button_ok"/>
@@ -375,7 +376,7 @@
 <icon BUILTIN="button_ok"/>
 <node TEXT="彩民注册" ID="ID_1914263206" CREATED="1664069918189" MODIFIED="1664194022596">
 <icon BUILTIN="button_ok"/>
-<node TEXT="1. 检查用户名是否唯一&#xa;2. 检查用户名密码长度是否满足条件&#xa;3. 检查两次输入的密码是否一致&#xa;&#xa;都满足则写入链表" ID="ID_1944753273" CREATED="1664080330086" MODIFIED="1664602392233" FORMAT="markdownPatternFormat">
+<node TEXT="1.检查用户名是否唯一&#xa;&#xa;2.检查用户名密码长度是否满足条件&#xa;&#xa;3.检查两次输入的密码是否一致&#xa;&#xa;都满足则写入链表" ID="ID_1944753273" CREATED="1664080330086" MODIFIED="1664690240517" FORMAT="markdownPatternFormat">
 <icon BUILTIN="button_ok"/>
 </node>
 <node TEXT="注册完自动保存账号到文件" ID="ID_90757055" CREATED="1664451356269" MODIFIED="1664606812506">

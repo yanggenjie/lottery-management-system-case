@@ -1,25 +1,6 @@
 #ifndef ADMINMENU_H
 #define ADMINMENU_H
 #include "account.h"
-//发行信息
-typedef struct
-{
-	unsigned issue;			   //发行期号
-	unsigned short price;	   //彩票单价
-	unsigned short status;	   //开奖状态,0未开奖，1已开奖
-	char winResult[22];		   //本期中奖号码,开奖时随机生成
-	unsigned totalSold;		   //本期售出总数
-	float totalPrize;		   //本期奖池总额
-	unsigned winLevelCount[6]; //中奖数量统计，数组第0个位置代表一等奖，以此类推
-} ReleaseData;
-
-//发行信息链表
-struct releaseDataLinkedlist
-{
-	ReleaseData data;
-	struct releaseDataLinkedlist *next;
-};
-typedef struct releaseDataLinkedlist ReleaseDataLinkedlist;
 
 /********************************/
 /***********管理员菜单相关功能***********/
@@ -40,14 +21,14 @@ void AddToReleaseDataLinkedList(ReleaseData newData);
 /*
  *   检查期号唯一性
  * @param issue 期号
- * 返回值：期号唯一，返回1，不唯一返回0
+ * 返回值：期号唯一,返回1,不唯一返回0
  */
 int CheckIssueNumberUniqueness(unsigned int issue);
 
 /*
  *   检查上期开奖状态
  * @param issue 期号
- * 返回值：没有发行过任何期数时或上期已开奖，返回1，未开奖返回
+ * 返回值：没有发行过任何期数时或上期已开奖,返回1,未开奖返回
  */
 int CheckPreIssueStatus();
 
