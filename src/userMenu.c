@@ -58,7 +58,7 @@ void UserMenu()
             // 保存账号文件
             WriteLotteryAccountToBin();
             // 退出登录
-            return;
+            break;
         case 7:
             return;
         default:
@@ -507,6 +507,7 @@ int DeleteLotteryAccountConfirm()
     printf("×××××××××××××××××××××××××××××\n");
     printf("---------------------------\n");
     printf("您当前账户：\n");
+    printf("用户名\t账户余额(元)\t当期购买(彩票/张)\t当期下注(号码/个)\t历史购买(彩票/张)\t历史下注(号码/个)\n");
     DisplaySingleLotteryInfo(lotteryCurrentLogin); // 显示账户信息
     printf("---------------------------\n");
     printf("注销账户之后,您的账户金额将被清空,且不可恢复！\n");

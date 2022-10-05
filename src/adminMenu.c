@@ -213,6 +213,7 @@ void QueryByUserName()
         {
             check++;
             // 输出打印彩民信息
+            printf("用户名\t账户余额(元)\t当期购买(彩票/张)\t当期下注(号码/个)\t历史购买(彩票/张)\t历史下注(号码/个)\n");
             DisplaySingleLotteryInfo(temp);
         }
         temp = temp->next;
@@ -243,6 +244,7 @@ void QueryByBalanceRange()
         {
             // 找到直接输出结果
             check++;
+            printf("用户名\t账户余额(元)\t当期购买(彩票/张)\t当期下注(号码/个)\t历史购买(彩票/张)\t历史下注(号码/个)\n");
             DisplaySingleLotteryInfo(temp);
         }
         temp = temp->next;
@@ -382,7 +384,6 @@ void DisplayAllLottery()
     {
         printf("--------------------------------------------------------");
     }
-    
 }
 // 输出单个彩民信息
 void DisplaySingleLotteryInfo(LotteryAccountLinkedList *userNode)
@@ -420,6 +421,7 @@ void ViewAllRelease()
     {
         // 打印彩票信息
         ViewSingleRelease(releaseData);
+        putchar('\n');
         releaseData = releaseData->next;
     }
 }
@@ -432,8 +434,8 @@ void SaveMenu()
     {
         printf("\n*******************************************\n");
         printf("\t1.保存彩票发行信息\n");
-        printf("\t2.保存公证员账号\n");
-        printf("\t3.保存管理员账号\n");
+        printf("\t2.保存管理员账号\n");
+        printf("\t3.保存公证员账号\n");
         printf("\t4.返回上一级菜单\n");
         printf("\n*******************************************\n");
         printf("请选择功能：");
@@ -447,10 +449,16 @@ void SaveMenu()
             printf("\n------------------------------\n");
             break;
         case 2:
-            printf("尚未开通\n");
+            WriteAdminAccountToBin();
+            printf("\n------------------------------\n");
+            printf("保存成功！\n");
+            printf("\n------------------------------\n");
             break;
         case 3:
-            printf("尚未开通\n");
+            WriteNotaryAccountToBin();
+            printf("\n------------------------------\n");
+            printf("账号保存成功！\n");
+            printf("\n------------------------------\n");
             break;
         case 4:
             return;

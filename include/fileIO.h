@@ -9,10 +9,14 @@ void WriteLotteryAccountToBin();
 void ReadLotteryAccountFromBin();
 
 // 保存管理员账号
+void WriteAdminAccountToBin();
 // 读取管理员账号
+void ReadAdminAccountFromBin();
 
 // 保存公证员账号
+void WriteNotaryAccountToBin();
 // 读取公证员账号
+void ReadNotaryAccountFromBin();
 
 // 保存发行信息
 void WriteReleaseDataToBin();
