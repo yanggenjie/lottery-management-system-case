@@ -118,6 +118,9 @@
 <node TEXT="测试方法" ID="ID_1364958418" CREATED="1664878820096" MODIFIED="1664878823078">
 <node TEXT="再次注册&#xa;&#xa;- u6,123，余额20&#xa;- u4,123，余额5&#xa;- u5,123，余额200&#xa;&#xa;- 先查看所有彩民信息，看看乱序的显示，&#xa;- 然后点击根据账号排序，查看此时的显示顺序。" ID="ID_214849096" CREATED="1664879050586" MODIFIED="1664879223921" FORMAT="markdownPatternFormat" MAX_WIDTH="20 cm"/>
 </node>
+<node TEXT="bug" ID="ID_1841456149" CREATED="1664970729533" MODIFIED="1664970731106">
+<node TEXT="出现段错误，选择排序有问题" ID="ID_1934666776" CREATED="1664970731264" MODIFIED="1664970744925"/>
+</node>
 </node>
 <node TEXT="根据彩民账号余额排序" ID="ID_1975976746" CREATED="1664763635255" MODIFIED="1664763646057">
 <node TEXT="测试方法" ID="ID_1279726420" CREATED="1664878820096" MODIFIED="1664878823078">
@@ -198,7 +201,7 @@
 <node TEXT="bug" ID="ID_1825756328" CREATED="1664863277661" MODIFIED="1664863279609">
 <node TEXT="会生成乱码" ID="ID_362666432" CREATED="1664877341372" MODIFIED="1664877352059">
 <node TEXT="已修复" ID="ID_1004373262" CREATED="1664863279783" MODIFIED="1664881278496">
-<arrowlink DESTINATION="ID_197277470" STARTINCLINATION="-54 pt;34.5 pt;" ENDINCLINATION="33.75 pt;-11.25 pt;"/>
+<arrowlink DESTINATION="ID_197277470" STARTINCLINATION="-53.25 pt;34.5 pt;" ENDINCLINATION="33.75 pt;-10.5 pt;"/>
 <node TEXT="已修复，是打印的时候访问越界的下标，程序也有些问题，与打印出现乱码相同，都是数组下标越界&#xa;&#xa;```c&#xa;// 原循环结束的判断条件如下&#xa;strcmp(ticketTemp-&gt;data.numStr[i], empty) != 0&#xa;//修改后如下&#xa;strcmp(ticketTemp-&gt;data.numStr[i], empty) != 0 &amp;&amp; i &lt; 5&#xa;&#xa;```&#xa;numStr是5行22列的数组，忘记对i进行限制，本来只能访问到numStr[4]的，&#xa;&#xa;由于这里是循环条件的判断，没有加i&lt;5，i会一直增长下去，&#xa;&#xa;无限循环，所以，有循环的地方，要保证循环时，数组下标不会越界，否则就会出现各种意想不到的问题。" ID="ID_328086652" CREATED="1664870777610" MODIFIED="1664881084236" FORMAT="markdownPatternFormat" MAX_WIDTH="20 cm"/>
 </node>
 </node>

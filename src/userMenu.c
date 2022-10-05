@@ -39,7 +39,7 @@ void UserMenu()
         switch (choose)
         {
         case 1:
-            DisplaySingleLotteryInfo(lotteryCurrentLogin);
+            ViewPersonalInfo(lotteryCurrentLogin);
             break;
         case 2:
             ChangePassword();
@@ -65,6 +65,26 @@ void UserMenu()
             break;
         }
     }
+}
+
+// 查看彩民信息
+void ViewPersonalInfo(LotteryAccountLinkedList *userNode)
+{
+    if (userNode == NULL)
+    {
+        printf("用户信息不存在,\n");
+        return;
+    }
+    ReCountUserTicketData(userNode);
+    printf("------------------------------------------\n");
+    printf("用户名：%s\n", userNode->data.account.name);
+    printf("账户余额：%.2f 元\n", userNode->data.balance);
+    // printf("当期已购：%d张彩票\n", userNode->data.tickets);
+    printf("当期购买：%d张彩票\n", userNode->data.currentReleaseTickets);
+    printf("当期下注：%d个号码\n", userNode->data.currentReleaseTicketNums);
+    printf("历史购买：%d张彩票\n", userNode->data.allReleaseTickets);
+    printf("历史下注：%d个号码\n", userNode->data.allReleaseTicketNums);
+    printf("------------------------------------------\n");
 }
 
 // 修改密码

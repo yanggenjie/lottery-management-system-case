@@ -50,6 +50,7 @@ void DisplayLotteryInfo();
 /***********排序功能相关***********/
 // 排序功能主界面
 void SortDisplayLotteryMenu();
+
 // 根据账号排序显示
 void SortDisplayLotteryByAccount();
 // 根据余额排序显示
@@ -57,9 +58,7 @@ void SortDisplayLotteryByBalance();
 
 // 显示所有彩民信息
 void DisplayAllLottery();
-// 显示单个彩民信息
 void DisplaySingleLotteryInfo(LotteryAccountLinkedList *userNode);
-
 // 查看发行历史
 void ViewAllRelease();
 

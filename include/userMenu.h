@@ -5,7 +5,8 @@
 /***********彩民主界面*********/
 // 彩民客户端主界面
 void UserMenu();
-// 显示个人信息,详见adminMenu.h,在查询彩民信息时已实现
+// 查看彩民信息
+void ViewPersonalInfo(LotteryAccountLinkedList *userNode);
 
 // 修改密码
 void ChangePassword();

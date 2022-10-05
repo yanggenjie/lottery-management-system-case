@@ -21,7 +21,7 @@ void AdminMenu()
     {
         printf("\t1.发行彩票\n");
         printf("\t2.查询彩民信息\n");
-        printf("\t3.排序彩民信息\n");
+        printf("\t3.排序显示彩民信息\n");
         printf("\t4.查看发行历史\n");
         printf("\t5.账号管理\n");
         printf("\t6.保存\n");
@@ -266,7 +266,7 @@ void SortDisplayLotteryMenu()
         printf("\n*******************************************\n");
 
         printf("\t1.显示所有彩民信息\n");
-        printf("\t1.根据账号排序显示\n");
+        printf("\t2.根据账号排序显示\n");
         printf("\t3.根据账户余额排序显示\n");
         printf("\t4.返回上一级菜单\n");
         printf("\n*******************************************\n");
@@ -290,7 +290,6 @@ void SortDisplayLotteryMenu()
         }
     }
 }
-// 根据账号排序显示
 
 void SortDisplayLotteryByAccount()
 {
@@ -320,21 +319,10 @@ void SortDisplayLotteryByAccount()
                 min = j;
             }
         }
-        // 得到更小值之后,节点交换
-        // 如果是头节点,要重新标记头节点,其他可直接交换
-        LotteryAccountLinkedList *prev = FindLotteryAccountPreNode(min);
-        LotteryAccountLinkedList *next = min->next;
-        if (prev == lotteryAccountHead)
-        {
-            lotteryAccountHead->next = min->next;
-            min->next = lotteryAccountHead;
-            lotteryAccountHead = min;
-            break;
-        }
-        min->next = lotteryAccountHead->next;
-        prev->next = lotteryAccountHead;
-        lotteryAccountHead->next = next;
-        lotteryAccountHead = min;
+        // 得到更小值之后,节点中的值进行交换
+        LotteryData temp = i->data;
+        i->data = min->data;
+        min->data = temp;
     }
     // 打印输出信息
     DisplayAllLottery();
@@ -354,7 +342,6 @@ void SortDisplayLotteryByBalance()
         DisplaySingleLotteryInfo(lotteryAccountHead);
         return;
     }
-
     // 有2个以上的用户,进行选择排序,升序排序
     for (LotteryAccountLinkedList *i = lotteryAccountHead; i != NULL; i = i->next)
     {
@@ -368,21 +355,10 @@ void SortDisplayLotteryByBalance()
                 min = j;
             }
         }
-        // 得到更小值之后,节点交换
-        // 如果是头节点,要重新标记头节点,其他可直接交换
-        LotteryAccountLinkedList *prev = FindLotteryAccountPreNode(min);
-        LotteryAccountLinkedList *next = min->next;
-        if (prev == lotteryAccountHead)
-        {
-            lotteryAccountHead->next = min->next;
-            min->next = lotteryAccountHead;
-            lotteryAccountHead = min;
-            break;
-        }
-        min->next = lotteryAccountHead->next;
-        prev->next = lotteryAccountHead;
-        lotteryAccountHead->next = next;
-        lotteryAccountHead = min;
+        // 得到更小值之后,节点中的值进行交换
+        LotteryData temp = i->data;
+        i->data = min->data;
+        min->data = temp;
     }
     // 打印输出信息
     DisplayAllLottery();
@@ -396,11 +372,17 @@ void DisplayAllLottery()
     {
         printf("尚不存在任何用户\n");
     }
+    printf("用户名\t账户余额(元)\t当期购买(彩票/张)\t当期下注(号码/个)\t历史购买(彩票/张)\t历史下注(号码/个)\n");
     while (temp != NULL)
     {
         DisplaySingleLotteryInfo(temp);
         temp = temp->next;
     }
+    for (int i = 0; i < 2; i++)
+    {
+        printf("--------------------------------------------------------");
+    }
+    
 }
 // 输出单个彩民信息
 void DisplaySingleLotteryInfo(LotteryAccountLinkedList *userNode)
@@ -411,15 +393,18 @@ void DisplaySingleLotteryInfo(LotteryAccountLinkedList *userNode)
         return;
     }
     ReCountUserTicketData(userNode);
-    printf("------------------------------------------\n");
-    printf("用户名：%s\n", userNode->data.account.name);
-    printf("账户余额：%.2f 元\n", userNode->data.balance);
+    for (int i = 0; i < 2; i++)
+    {
+        printf("--------------------------------------------------------");
+    }
+    putchar(10);
+    printf("%-10s", userNode->data.account.name);
+    printf("%-20.2f", userNode->data.balance);
     // printf("当期已购：%d张彩票\n", userNode->data.tickets);
-    printf("当期购买：%d张彩票\n", userNode->data.currentReleaseTickets);
-    printf("当期下注：%d个号码\n", userNode->data.currentReleaseTicketNums);
-    printf("历史购买：%d张彩票\n", userNode->data.allReleaseTickets);
-    printf("历史下注：%d个号码\n", userNode->data.allReleaseTicketNums);
-    printf("------------------------------------------\n");
+    printf("%-20d\t", userNode->data.currentReleaseTickets);
+    printf("%-20d\t", userNode->data.currentReleaseTicketNums);
+    printf("%-20d\t", userNode->data.allReleaseTickets);
+    printf("%-20d\n", userNode->data.allReleaseTicketNums);
 }
 
 // 查看发行历史
