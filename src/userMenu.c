@@ -110,7 +110,7 @@ void ChangePassword()
             {
                 printf("密码输入错误%d次,取消密码修改\n", cnt);
                 // 返回主菜单
-                UserMenu();
+                return;
             }
             printf("密码输入错误%d次,请重新输入\n", cnt);
         }

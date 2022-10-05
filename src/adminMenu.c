@@ -193,7 +193,7 @@ void QueryLotteryInfoMenu()
         }
     }
 }
-
+// 根据彩民账号(用户名)查询
 void QueryByUserName()
 {
     char uname[30];
@@ -223,6 +223,7 @@ void QueryByUserName()
         return;
     }
 }
+// 根据账户余额查询
 void QueryByBalanceRange()
 {
     float min, max;
@@ -289,6 +290,7 @@ void SortDisplayLotteryMenu()
         }
     }
 }
+// 根据账号排序显示
 
 void SortDisplayLotteryByAccount()
 {
@@ -337,6 +339,7 @@ void SortDisplayLotteryByAccount()
     // 打印输出信息
     DisplayAllLottery();
 }
+// 根据余额排序显示
 void SortDisplayLotteryByBalance()
 {
     // 没有任何用户
