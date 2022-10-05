@@ -81,8 +81,10 @@ void ReleaseResults()
     releaseDataCurrent->data.status = 1;
     printf("开奖成功!\n");
     printf("本期中奖号码为:%s\n", releaseDataCurrent->data.winResult);
-    // 更新中奖结果，然后同步数据到彩票上
+    // 计算中奖结果，同步数据到彩票上
     SynDataToTicket();
+    //分发低等奖奖金
+    // DistributeLowerBonus();
     // 发完所有低等奖奖金之后,用奖池剩余的奖金分发到一等奖、二等奖用户
     DistributeAdvanceBonus();
     // 打印中奖用户
@@ -95,7 +97,7 @@ void ReleaseResults()
     WriteTicketDataToFile();
 }
 
-// 中奖用户
+//  计算中奖结果，同步数据到彩票上
 void SynDataToTicket()
 {
     // 先把中奖的号码字符串取出来,转成整型放到winResult,0-5存放红球,6放蓝球
@@ -246,6 +248,32 @@ void StrArrayToInt(char *sourceStr, int num[])
            &num[3], &num[4], &num[5],
            &num[6]);
 }
+
+// //分发低等奖奖金
+// void DistributeLowerBonus()
+// {
+//     //遍历彩票信息，找到中奖的彩票
+//     TicketDataLinkedList *ticketTemp = ticketDataHead;
+//     if (ticketTemp == NULL)
+//     {
+//         return;
+//     }
+//     while (ticketTemp != NULL)
+//     {
+//         //中奖标记不为空，说明中奖了，之前已经标记好奖金金额，只需找到对应用户发放奖金
+//         if (ticketTemp->data.winLevel > 0)
+//         {
+//             //通过彩票上的购买者找到账号节点
+//             LotteryAccountLinkedList *user = FindNotaryAccountNodeByUserName(ticketTemp->data.purchaser);
+//             if (user != NULL)
+//             {
+//                 user->data.balance += ticketTemp->data.bonus;
+//             }
+//         }
+//         //遍历下一张彩票
+//         ticketTemp=ticketTemp->next;
+//     }
+// }
 
 // 分发高等奖奖金
 void DistributeAdvanceBonus()

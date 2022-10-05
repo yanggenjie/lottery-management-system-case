@@ -201,7 +201,7 @@ void MachineSelection(int n)
 {
     TicketData newSoldData;
     // 生成唯一id序列
-    TimePlugRandIDGenerator(newSoldData.id);
+    IDGeneratorWithTimeAndRandNum(newSoldData.id);
     // 初始化彩票发行号
     newSoldData.issueNum = releaseDataCurrent->data.issue;
     // 初始化本期开奖状态
@@ -231,7 +231,7 @@ void MachineSelection(int n)
         // 添加到链表之前检查id是否重复
         if (CheckIDUniqueness(newSoldData.id))
         {
-            TimePlugRandIDGenerator(newSoldData.id);
+            IDGeneratorWithTimeAndRandNum(newSoldData.id);
         }
         // 添加数据到链表
         AddToTicketDataLinkedList(newSoldData);
@@ -258,7 +258,7 @@ void MachineSelection(int n)
             // 添加到链表之前检查id是否重复
             if (CheckIDUniqueness(newSoldData.id))
             {
-                TimePlugRandIDGenerator(newSoldData.id);
+                IDGeneratorWithTimeAndRandNum(newSoldData.id);
             }
             // 添加数据到链表
             AddToTicketDataLinkedList(newSoldData);
@@ -278,7 +278,7 @@ void MachineSelection(int n)
             // 添加到链表之前检查id是否重复
             if (CheckIDUniqueness(newSoldData.id))
             {
-                TimePlugRandIDGenerator(newSoldData.id);
+                IDGeneratorWithTimeAndRandNum(newSoldData.id);
             }
             // 添加数据到链表
             AddToTicketDataLinkedList(newSoldData);
@@ -395,7 +395,7 @@ int CheckBetNumberUniqueness(char nums[])
     return 0;
 }
 // 彩票ID生成器
-void TimePlugRandIDGenerator(char *id)
+void IDGeneratorWithTimeAndRandNum(char *id)
 {
     // 用时间戳+3位数的随机字符指定id，最大限度降低id重复率，目前生成字符串的长度为28
     char emptyContainer[30] = {'\0'};
@@ -404,7 +404,7 @@ void TimePlugRandIDGenerator(char *id)
     // int randNum = rand() % 999 + 100;
     // 生成时间序列
     // strftime：将struct tm转为指定格式的字符串，并复制到指定地址
-    strftime(emptyContainer, sizeof(emptyContainer), "%FT%T%z ", localtime(&now));
+    strftime(emptyContainer, sizeof(emptyContainer), "%F %T%z ", localtime(&now));
     // 生成三位数的随机数,保存到randStr
     sprintf(randStr, "%d", (rand() % 898 + 101));
     strcat(emptyContainer, randStr);

@@ -1,9 +1,0 @@
-
-warning: Currently logging to gdb.txt.  Turn the logging off and on to make the new setting effective.
-Reading symbols from bin/Ticket...done.
-Starting program: /media/workspace/第一阶段项目/彩票管理系统/bin/Ticket 
-
-Program received signal SIGINT, Interrupt.
-__strcmp_sse2_unaligned () at ../sysdeps/x86_64/multiarch/strcmp-sse2-unaligned.S:31
-31	../sysdeps/x86_64/multiarch/strcmp-sse2-unaligned.S: No such file or directory.
-Quit

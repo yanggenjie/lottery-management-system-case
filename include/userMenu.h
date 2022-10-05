@@ -40,7 +40,7 @@ void randomNum(char *nums);
 */
 int CheckBetNumberUniqueness(char nums[]);
 // 彩票ID生成器
-void TimePlugRandIDGenerator(char *id);
+void IDGeneratorWithTimeAndRandNum(char *id);
 
 /*
 id重复性检测

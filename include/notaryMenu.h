@@ -7,7 +7,7 @@ void NotaryMenu();
 // 开奖
 void ReleaseResults();
 
-// 更新中奖结果，同步数据到彩票上
+// 计算中奖结果，同步数据到彩票上
 void SynDataToTicket();
 
 /*
@@ -35,8 +35,11 @@ void UpdateWinningResultToTicketData(TicketDataLinkedList *ticket, short level, 
  */
 void StrArrayToInt(char *str, int num[]);
 
+// //分发低等奖奖金
+// void DistributeLowerBonus();
 // 分发高等奖奖金
 void DistributeAdvanceBonus();
+
 
 // 打印中奖用户的信息
 void DisplayWinner();
