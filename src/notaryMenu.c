@@ -1,3 +1,7 @@
+/*
+ * 当前文件：notaryMenu
+ * 文件描述：实现公证员界面相关功能
+ */
 #include "adminMenu.h"
 #include "notaryMenu.h"
 #include "userMenu.h"

@@ -1,3 +1,8 @@
+/*
+ * 当前文件：account.c
+ * 文件描述：实现彩民、管理员、公证员等账号的操作
+ */
+
 #include "account.h"
 #include "adminMenu.h"
 #include "userMenu.h"
@@ -613,6 +618,3 @@ int IsUserLogin(char name[], char pwd[])
     }
     return 0;
 }
-
-/********************************/
-/***********注销功能相关***********/

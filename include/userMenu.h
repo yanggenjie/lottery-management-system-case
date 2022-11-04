@@ -74,5 +74,4 @@ void DisplayTicketData(TicketDataLinkedList *ticketData);
  */
 void ReCountUserTicketData(LotteryAccountLinkedList *user);
 
-
 #endif

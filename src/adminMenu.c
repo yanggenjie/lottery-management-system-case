@@ -1,3 +1,8 @@
+/*
+ * 当前文件：adminMenu
+ * 文件描述：实现管理员界面相关功能
+ */
+
 #include "account.h"
 #include "adminMenu.h"
 #include "notaryMenu.h"

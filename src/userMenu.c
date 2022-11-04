@@ -1,3 +1,7 @@
+/*
+ * 当前文件：userMenu
+ * 文件描述：实现彩民界面相关功能
+ */
 #include "account.h"
 #include "userMenu.h"
 #include "adminMenu.h"
